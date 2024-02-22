@@ -9,6 +9,8 @@ import Calendar from "../Image/icons8-calendar-50.png";
 import Computer from "../Image/icons8-desktop-50.png";
 import Logo from "../Image/money-back-in-60-days-guarantee-badge-golden-medal-vector-20372626-removebg-preview.png";
 import axios from "axios";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 import giphy from "../Image/giphy.gif";
 
 import { NavLink, useNavigate } from "react-router-dom";
@@ -285,6 +287,7 @@ const handleupdateofdriver =(e)=>{
     }
   };
 
+
   return cleanerStart === "status" ? (
     <>
       <div className="container-fluid">
@@ -347,7 +350,6 @@ const handleupdateofdriver =(e)=>{
                                 checked={driver.ischecked}
                                 onChange={handleSelect}
                                 style={{ display: driver.DriverStatus === "Up to date" ? "none" : "block" }}
-
                               />
                               <label
                                 class="form-check-label"
@@ -405,101 +407,45 @@ const handleupdateofdriver =(e)=>{
       {hide && (
         <div className="exclusion-main">
           <h1 style={{ marginLeft: "54px", marginTop: "12px" }} className="font-extrabold">
-            <b>Update all your drivers in minutes</b>
+            <b>Intel(R) UHD GRAPHICS </b>
           </h1>
           <div onClick={(e) => setHide(false)}>
             <span className="close"></span>
           </div>
-          <div className="New-box">
-            <div className="row ">
-              <div className="flex justify-content-between">
-                <img src={Danger} alt="File Explorer" className="boxicons" />
-                <div className="popdata">
-                  <h4 className="font-extrabold">1 Outdated Drivers Found !</h4>
-                  <p className="font-medium text-xs mt-1">
-                    To update outdated drivers clickon Purchase Now button.
-                  </p>
-                </div>
-              </div>
+          <div className="flex justify-content-evenly">
+            <div className="designupdate">
+    <div className="design">
+    <span className="font-bold">Driver Status</span><br/>
+    <button className="btn btn-primary mt-2 text-xs rounded-md	">OUTEDATED <WatchLaterIcon sx={{ fontSize: 15 }} /></button><br/>
+    </div>
+           
+<div className="mtgiven ">
+<span className="font-bold ml-2">Availble</span>
+  <span className="flex justify-content-between text-xs mx-2 mt-4">Version: <p>7467.54.5.5.5</p></span><br/>
+  <span className="flex justify-content-between text-xs mx-2">Date: <p>26-02-2-24</p></span>
+</div>
             </div>
-          </div>
-          <h5 style={{ marginLeft: "34px", marginTop: "22px" }} className="text-sm" >
-            Advanced Driver Updater can quickly and easily update these drivers
-            to restore optimum
-            <br></br>performance to your PC
-          </h5>
-          <div className="row flex justify-content-between mt-3 mb-4">
-            <div className="col-3 ml-8">
-              <div>
-                <img
-                  src={Clock}
-                  alt="File Explorer"
-                  className="box-icon ml-6"
-                />
+            <div className="designupdate1">
+              <h1 className="font-semibold">Register now to enjoy:</h1>
+              <div className="mt-4 mb-9">
+              <span className="font-thin text-sm mt-3 my-2"><CheckCircleIcon color="primary" sx={{ fontSize: 15 }} /> Update drivers in one click</span><br/>
+              <span className="font-thin text-sm"><CheckCircleIcon color="primary" sx={{ fontSize: 15 }} /> Accelerated download</span><br/>
+              <span className="font-thin mb-4 text-sm"><CheckCircleIcon color="primary" sx={{ fontSize: 15 }} /> Largest driver database</span>
+              
               </div>
-              <div className="text-xs font-semibold">
-                <h6>
-                  Easy to use , Safe <br /> and saves your time .{" "}
-                </h6>{" "}
-              </div>
-            </div>
+              
+              <p className="text-xs font-bold">Save time and manual effort</p>
 
-            <div className="col-3">
-              <div>
-                {" "}
-                <img
-                  src={Computer}
-                  alt="File Explorer"
-                  className="box-icon ml-6"
-                />
-              </div>
-              <div className="text-xs font-semibold">
-                <h6>
-                  Get the most out <br /> of your PC
-                </h6>{" "}
-              </div>{" "}
-            </div>
-            <div className="col-3">
-              <div>
-                {" "}
-                <img
-                  src={Calendar}
-                  alt="File Explorer"
-                  className="box-icon ml-6"
-                />
-              </div>
-              <div className="text-xs font-semibold">
-                <h6>
-                  Ensure Long lasting <br />
-                  performance
-                </h6>{" "}
-              </div>{" "}
-            </div>
-          </div>
-          <div className="footer bottom-0">
-            <div className="row">
-              <div className="flex justify-content-between ">
-                <div className="flex">
-                  <img src={Logo} alt="Logo" className="box-icon11" />
-                  <span className=" font-serif text-xs font-medium text-white ml-1 mt-3">
-                    60 Days Money Back Guarantee
-                    <br />
-                    No Questions Asked
-                  </span>
-                </div>
-                <button className="btn btn-light designbtn1 border-black text-black" onClick={updatedrive}>
-              Update Now
-            </button>
+<div className="desbtn">
+<button className="btn btn-light bg-green-700 mx-2 px-3 " onClick={updatedrive} >Update</button>
+<button className="btn btn-light bg-gray-400  px-3 " > Register Now</button>
 
-                <a
-                  href="https://cleanersite.netlify.app/checkout"
-                  className="btn btn-light bg-green-700 designbtn2 px-3"
-                >
-                  Purchase Now
-                </a>
-              </div>
+</div>
+
+
             </div>
           </div>
+         
         </div>
       )}
       {exclusionStatus && (
@@ -659,6 +605,7 @@ const handleupdateofdriver =(e)=>{
         </div>
       )}
 
+{/* for update popup  */}
       {showdriver && (
         <div className="exclusion-maintesting">
         <h1 style={{ marginLeft: "10px", marginTop: "7px" }} className="font-extrabold">
@@ -689,7 +636,7 @@ const handleupdateofdriver =(e)=>{
 
           </div>
             {updateCompleted && (
-                <div className="update-completed-message text-white">
+                <div className="update-completed-message text-black mssg">
                     Drivers updated successfully!
                 </div>
             )}
@@ -697,7 +644,7 @@ const handleupdateofdriver =(e)=>{
       </div>
      </div>
      <div id="pagescanbottomscanagain" className="fixed-bottom   flex justify-content-end bg-gray-100">
-     <a className="btn btn-light designbtn1 mr-2 border-black bg-yellow-700 text-white" href="" onClick={(e) => setShowdriver(false)}>Ok </a>
+     <a className="btn btn-light designbtn10 mr-2 border-black bg-green-700 text-white px-3" href="" onClick={(e) => setShowdriver(false)}>Ok </a>
      </div>
      </div>
       )}
