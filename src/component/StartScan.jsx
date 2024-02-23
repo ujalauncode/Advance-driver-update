@@ -98,7 +98,7 @@ useEffect(() => {
     console.log("window update ----", b)
     try {
       const response = await invoke('mine_driver');
-      console.log("frontend drivers are", response);
+      console.log("frontend drivers are===",response );
       setDriverInfo(response);
     } catch (error) {
       console.error('Error fetching driver info:', error);
