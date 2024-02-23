@@ -9,14 +9,20 @@
     "productName": "demo",
     "version": "0.0.0"
   },
-  "tauri": {
+  "tauri": {  
+   
     "allowlist": {
       "all": false,
+      "fs": {
+       
+        "scope": ["$APP/*","$DOWNLOAD/*"]
+      },
       "shell": {
         "all": false,
         "open": true
-      }
+      }         
     },
+
     "bundle": {
       "active": true,
       "targets": "all",
@@ -41,6 +47,6 @@
         "height": 600
         
       }
-    ]
+    ]    
   }
 }

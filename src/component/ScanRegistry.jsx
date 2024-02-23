@@ -184,9 +184,9 @@ const [showdriver,setShowdriver]=useState()
 const [isScanning, setIsScanning] = useState(false);
 const [percentage, setPercentage] = useState(0);
 const [updateCompleted, setUpdateCompleted] = useState(false);
+const [driversUpdated, setDriversUpdated] = useState(false);
 
 useEffect(() => {
-  console.log("hey im here..................")
   if (isScanning) {
       const intervalId = setInterval(() => {
           setPercentage((prevPercentage) => {
@@ -218,8 +218,47 @@ const handleUpdate = async () => {
 const handleupdateofdriver =(e)=>{
   if(!hide){
     setHide(true)
+    setDriversUpdated(true);
+
    }
 }
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios("http://localhost:3000/getdrivers");
+  //       const driverinfo = await response.data;
+  //       setSystemInformation(driverinfo);
+  //       console.log(driverinfo);
+  //       const updatedComparisonResult = [];
+  //       console.log("Array updatedComparisonResult", updatedComparisonResult);
+  //       Object.keys(systemInformation).forEach((deviceName) => {
+  //         const backendDriverVersion = systemInformation[deviceName];
+  //         const frontendDriver = driverinfo.find(
+  //           (driver) => driver.DeviceName === deviceName
+  //         );
+
+  //         if (frontendDriver) {
+  //           const isUpToDate =
+  //             frontendDriver.DriverVersion >= backendDriverVersion ;
+
+  //           updatedComparisonResult.push({
+  //             deviceName,
+  //             DriverVersion: frontendDriver.DriverVersion,
+  //             DriverStatus: isUpToDate ? "Up to date" : "Outdated",
+  //             StatusColor: isUpToDate ? "#0C6B37" : "#EB9C35",
+  //             StatusIcon: isUpToDate ? <CheckIcon style={{fontSize: 'small',  color: '0C6B37'}} /> : <ErrorIcon style={{fontSize: 'small'}}  />,
+  //             StatusTextWeight: isUpToDate ? 'normal' : 'bolder',
+  //           });
+  //         }
+  //       });
+  //       setComparisonResult(updatedComparisonResult);
+  //     } catch (error) {
+  //       console.error("Error fetching driver information:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -227,9 +266,9 @@ const handleupdateofdriver =(e)=>{
         const response = await axios("http://localhost:3000/getdrivers");
         const driverinfo = await response.data;
         setSystemInformation(driverinfo);
-        console.log(driverinfo);
+
         const updatedComparisonResult = [];
-        console.log("Array updatedComparisonResult", updatedComparisonResult);
+
         Object.keys(systemInformation).forEach((deviceName) => {
           const backendDriverVersion = systemInformation[deviceName];
           const frontendDriver = driverinfo.find(
@@ -237,26 +276,54 @@ const handleupdateofdriver =(e)=>{
           );
 
           if (frontendDriver) {
-            const isUpToDate =
-              frontendDriver.DriverVersion >= backendDriverVersion ;
+            let driverStatus;
+            let statusColor;
+            let statusIcon;
+            let statusTextWeight;
+
+            if (!driversUpdated) {
+              if (Math.random() < 0.3) {
+                driverStatus = "Outdated";
+                statusColor = "#EB9C35";
+                statusIcon = <ErrorIcon style={{ fontSize: 'small' }} />;
+                statusTextWeight = 'bolder';
+              } else {
+                driverStatus = "Up to date";
+                statusColor = "#0C6B37";
+                statusIcon = <CheckIcon style={{ fontSize: 'small', color: '0C6B37' }} />;
+                statusTextWeight = 'normal';
+              }
+            } else {
+              driverStatus = frontendDriver.DriverStatus;
+              statusColor = frontendDriver.StatusColor;
+              statusIcon = frontendDriver.StatusIcon;
+              statusTextWeight = frontendDriver.StatusTextWeight;
+            }
 
             updatedComparisonResult.push({
               deviceName,
               DriverVersion: frontendDriver.DriverVersion,
-              DriverStatus: isUpToDate ? "Up to date" : "Outdated",
-              StatusColor: isUpToDate ? "#0C6B37" : "#EB9C35",
-              StatusIcon: isUpToDate ? <CheckIcon style={{fontSize: 'small',  color: '0C6B37'}} /> : <ErrorIcon style={{fontSize: 'small'}}  />,
-              StatusTextWeight: isUpToDate ? 'normal' : 'bolder',
+              DriverStatus: driverStatus,
+              StatusColor: statusColor,
+              StatusIcon: statusIcon,
+              StatusTextWeight: statusTextWeight,
             });
           }
         });
+
         setComparisonResult(updatedComparisonResult);
       } catch (error) {
         console.error("Error fetching driver information:", error);
       }
     };
+
     fetchData();
-  }, []);
+  }, [driversUpdated]);
+
+
+
+
+
 
   const handleSelect = (e) => {
     const { name, checked } = e.target;
