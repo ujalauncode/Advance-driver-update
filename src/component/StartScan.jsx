@@ -87,13 +87,15 @@ export default function StartScan({ value = 0 }) {
     setIsScanning((prevIsScanning) => !prevIsScanning);
   };
 
-// Example code in your frontend
 
-// Invoke the command
 
 useEffect(() => {
   async function fetchDriverInfo() {
     console.log("hello from frontend");
+    const a =await invoke('system_info')
+    console.log("this is system info-----",  a)
+    const b = await invoke('get_windows_update')
+    console.log("window update ----", b)
     try {
       const response = await invoke('mine_driver');
       console.log("frontend drivers are", response);
