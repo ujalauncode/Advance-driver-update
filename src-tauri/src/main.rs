@@ -26,74 +26,153 @@ fn mine_driver() -> Result<String, String> {
     Ok(stdout.to_string())
 }
 
+// #[tauri::command]
+// fn __cmd__testing() -> String {
+//     let output = Command::new("SystemInfo")
+//         .output()
+//         .expect("Failed to execute command");
+//     let output_str = String::from_utf8_lossy(&output.stdout);
 
-use tauri::{command};
+//     output_str.to_string()
+// }
 
-#[derive(Debug, serde::Serialize)]
-struct SystemInfo {
-    cpu_info: String,
-    os_info: String,
-    disk_info_bytes: u64,
-    memory_info_bytes: u64,
+
+// this is for system info
+
+#[tauri::command]
+fn __cmd__testing() -> String {
+    use std::process::Command;
+
+    let output_system_info = Command::new("SystemInfo")
+        .output()
+        .expect("Failed to execute command");
+
+    let output_str_system_info = String::from_utf8_lossy(&output_system_info.stdout);
+
+    let output_os_info = Command::new("wmic")
+        .args(&["os", "get", "Caption"])
+        .output()
+        .expect("Failed to execute command");
+
+    let output_str_os_info = String::from_utf8_lossy(&output_os_info.stdout);
+
+    let output_cpu_info = Command::new("wmic")
+        .args(&["cpu", "get", "name"])
+        .output()
+        .expect("Failed to execute command");
+
+    let output_str_cpu_info = String::from_utf8_lossy(&output_cpu_info.stdout);
+
+    let output_disk_info = Command::new("wmic")
+        .args(&["diskdrive", "get", "size"])
+        .output()
+        .expect("Failed to execute command");
+
+    let output_str_disk_info = String::from_utf8_lossy(&output_disk_info.stdout);
+
+    let output_video_controller_info = Command::new("wmic")
+        .args(&["path", "Win32_VideoController", "get", "name"])
+        .output()
+        .expect("Failed to execute command");
+
+    let output_str_video_controller_info = String::from_utf8_lossy(&output_video_controller_info.stdout);
+
+    let mut extracted_info = String::new();
+
+    for line in output_str_system_info.lines() {
+        if line.starts_with("OS Name:")
+            || line.starts_with("Processor(s):")
+            || line.starts_with("Total Physical Memory:")
+            || line.starts_with("Product ID:")
+        {
+            extracted_info.push_str(line);
+            extracted_info.push('\n');
+        }
+    }
+
+    extracted_info.push_str("OS Info:\n");
+    extracted_info.push_str(&output_str_os_info);
+
+    extracted_info.push_str("CPU Info:\n");
+    extracted_info.push_str(&output_str_cpu_info);
+
+    extracted_info.push_str("Disk Info:\n");
+    extracted_info.push_str(&output_str_disk_info);
+
+    extracted_info.push_str("Video Controller Info:\n");
+    extracted_info.push_str(&output_str_video_controller_info);
+
+    extracted_info
 }
 
-#[command]
-fn system_info() -> SystemInfo {
-    let cpu_info = get_cpu_info();
-    let os_info = get_os_info();
-    let disk_info_bytes = get_disk_info_bytes();
-    let memory_info_bytes = get_memory_info_bytes();
 
-    SystemInfo {
-        cpu_info,
-        os_info,
-        disk_info_bytes,
-        memory_info_bytes,
+
+// this is to check updates
+
+#[tauri::command]
+fn __cmd__checkagain() -> String {
+    use std::process::Command;
+    let _ = Command::new("powershell")
+        .args(&["-Command", "Install-Module -Name PSWindowsUpdate -Force -AllowClobber"])
+        .output()
+        .expect("Failed to execute PowerShell command to install module");
+    let _ = Command::new("powershell")
+        .args(&["-Command", "Import-Module PSWindowsUpdate"])
+        .output()
+        .expect("Failed to execute PowerShell command to import module");
+
+    let check_updates_cmd = Command::new("powershell")
+        .args(&["-Command", "Get-WindowsUpdate -MicrosoftUpdate -Summary"])
+        .output();
+
+    match check_updates_cmd {
+        Ok(output) => {
+            let updates_output = String::from_utf8_lossy(&output.stdout);
+            
+            println!("Updates Output: {}", updates_output);
+
+            if updates_output.contains("No Updates Found") {
+                "No updates are available.".to_string()
+            } else {
+                updates_output.to_string()
+            }
+        },
+        Err(error) => {
+            eprintln!("Error executing PowerShell command: {:?}", error);
+            "Error executing PowerShell command.".to_string()
+        }
     }
 }
 
-fn get_cpu_info() -> String {
-    "Intel Core i7-8700K".to_string()
-}
-
-fn get_os_info() -> String {
-    "Windows 10".to_string()
-}
-
-fn get_disk_info_bytes() -> u64 {  
-    1024 * 1024 * 1024 * 100 // 100 GB
-}
-fn get_memory_info_bytes() -> u64 {
-    1024 * 1024 * 16 // 16 GB
-}
 
 
+// use std::process::Command;
 
-#[derive(Debug, serde::Serialize)]
-struct WindowsUpdateInfo {
-    // Define the fields you want to capture
-    // For simplicity, let's just capture the output of the command
-    output: String,
-}
+#[tauri::command]
+fn __cmd__checkupdate() -> String {
+    use std::process::Command;
 
-#[command]
-fn get_windows_update() -> WindowsUpdateInfo {
-    // Execute the PowerShell command to get Windows Update information
-    let output = match Command::new("powershell")
-        .args(&["-Command", "Get-WindowsUpdate"])
-        .output()
-    {
+    // Execute PowerShell command to install Windows updates
+    let install_updates_cmd = Command::new("powershell")
+        .args(&["-Command", "Install-WindowsUpdate"])
+        .output();
+
+    match install_updates_cmd {
         Ok(output) => {
-            // Convert the output bytes to a UTF-8 string
-            String::from_utf8_lossy(&output.stdout).to_string()
+            // Check if the command executed successfully
+            if output.status.success() {
+                return "Windows updates installed successfully.".to_string();
+            } else {
+                // If the command failed, print the error message
+                let error_message = String::from_utf8_lossy(&output.stderr);
+                return format!("Error installing Windows updates: {}", error_message);
+            }
         }
-        Err(error) => {
-            // If there's an error executing the command, return the error message
-            format!("Error executing PowerShell command: {}", error)
+        Err(err) => {
+            // Handle the error if the command couldn't be executed
+            return format!("Error executing PowerShell command: {}", err);
         }
-    };
-
-    WindowsUpdateInfo { output }
+    }
 }
 
 
@@ -101,7 +180,7 @@ fn get_windows_update() -> WindowsUpdateInfo {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, mine_driver, system_info,get_windows_update])
+        .invoke_handler(tauri::generate_handler![greet, mine_driver, __cmd__testing,__cmd__checkagain,__cmd__checkupdate])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

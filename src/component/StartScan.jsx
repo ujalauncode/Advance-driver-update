@@ -92,10 +92,14 @@ export default function StartScan({ value = 0 }) {
 useEffect(() => {
   async function fetchDriverInfo() {
     console.log("hello from frontend");
-    const a =await invoke('system_info')
+    const a =await invoke('__cmd__testing')
     console.log("this is system info-----",  a)
-    const b = await invoke('get_windows_update')
-    console.log("window update ----", b)
+    // const b = await invoke('get_windows_update')
+    // console.log("window update ----", b)
+const d=await invoke('__cmd__checkupdate')
+console.log("updating drivers",d)
+    const c=await invoke('__cmd__checkagain')
+    console.log("thiss for update which availble in sytsem", c)
     try {
       const response = await invoke('mine_driver');
       console.log("frontend drivers are===",response );
