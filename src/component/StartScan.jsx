@@ -44,34 +44,41 @@ export default function StartScan({ value = 0 }) {
       alert("Redirecting to another page and im getting display to uuuu!");
     }, delay);
   };
+
+
   const fetchData = async () => {
     console.log("fetch data running");
     try {
-      const response = await axios.get("http://localhost:3000/getdrivers");
-      const newDriverData = response.data;
-      setDriverData(newDriverData);
-      setCurrentIndexs(0);
-      scrollToFileEnd();
-      console.log("get driver route");
+      const response = await invoke('mine_driver');
+      const newDriverData = JSON.parse(response);
 
+      setDriverData(newDriverData);
+      console.log(newDriverData)
+      setCurrentIndexs(0);
+      console.log("get driver route");
+  
+      // Start scanning interval
       const intervalId = setInterval(() => {
         console.log("setInterval");
         if (isScanning) {
+          // Update percentage and currentIndexs
           setPercentage((prevPercentage) =>
             Math.min(prevPercentage + 100 / newDriverData.length, 100)
           );
           setCurrentIndexs((prevIndex) => prevIndex + 1);
-
+  
+          // Check if scanning is complete
           if (currentIndexs >= newDriverData.length) {
             clearInterval(intervalId);
             setPercentage(100);
             handleRedirect("scan-registry", 3000);
           }
         }
-      }, 100);
+      },100);
       setScanInterval(intervalId);
       console.log("first interval id =", intervalId);
-
+  
+      // Clear interval when component unmounts
       return () => clearInterval(intervalId);
     } catch (error) {
       console.error("Error:", error);
@@ -87,112 +94,102 @@ export default function StartScan({ value = 0 }) {
     setIsScanning((prevIsScanning) => !prevIsScanning);
   };
 
-
-
-useEffect(() => {
-  async function fetchDriverInfo() {
-    console.log("hello from frontend");
-    const a =await invoke('__cmd__testing')
-    console.log("this is system info-----",  a)
+  //     console.log("hello from frontend");
+    // const a =await invoke('__cmd__testing')
+    // console.log("this is system info-----",  a)
     // const b = await invoke('get_windows_update')
     // console.log("window update ----", b)
-const d=await invoke('__cmd__checkupdate')
-console.log("updating drivers",d)
-    const c=await invoke('__cmd__checkagain')
-    console.log("thiss for update which availble in sytsem", c)
-    try {
-      const response = await invoke('mine_driver');
-      console.log("frontend drivers are===",response );
-      setDriverInfo(response);
-    } catch (error) {
-      console.error('Error fetching driver info:', error);
-    }
-  }
-
-  fetchDriverInfo();
-}, []);
+// const d=await invoke('__cmd__checkupdate')
+// console.log("updating drivers",d)
+    // const c=await invoke('__cmd__checkagain')
 
 
+// useEffect(() => {
+//   async function fetchDriverInfo() {
+
+//     try {
+//       const response = await invoke('mine_driver');
+//       console.log("frontend drivers are===",response );
+//       setDriverInfo(response);
+//     } catch (error) {
+//       console.error('Error fetching driver info:', error);
+//     }
+//   }
+
+//   fetchDriverInfo();
+// }, []);
 
 
   return cleanerStatus === "status" ? (
-    // <>
-    //   <div className="StartScan flex justify-content-between">
-    //     <div>
-    //       <img src={giphy} alt="" className="imageofscan mr-3" />
-    //     </div>
-    //     <div>
-    //       <div className="progress">
-    //         <div
-    //           className="progress-bar bg-primary"
-    //           role="progressbar"
-    //           style={{ width: `${percentage}%` }}
-    //           aria-valuenow={percentage}
-    //           aria-valuemin="0"
-    //           aria-valuemax="100"
-    //         >
-    //           <span>{percentage.toFixed()}%</span>
-    //         </div>
-    //       </div>
-    //       <span className="ml-16 text-xs mt-16">
-    //         {currentIndexs < driverData.length && (
-    //           <p className="dat">{driverData[currentIndexs].DeviceName}</p>
-    //         )}
-    //       </span>
-    //     </div>
-    //   </div>
-    //   <div className="mt-8">
-    //     <div
-    //       ref={fileListRef}
-    //       style={{ height: "250px", overflowY: "auto" }}
-    //       className="backupregistry1 tableclasses"
-    //     >
-    //       <table className="table table-hover tablescan">
-    //         <thead className="table-secondary fixed	 ">
-    //           <tr className="headdesign">
-    //             <th scope="col" colSpan="1">
-    //               DriverName
-    //             </th>
-    //             <th scope="col">Version</th>
-    //           </tr>
-    //         </thead>
-    //         <tbody
-    //           className="overflow-y-scroll"
-    //           style={{ maxHeight: "200px", overflowY: "auto" }}
-    //         >
-    //           {driverData.slice(0, currentIndexs + 1).map((driver, index) => {
-    //             {
-    //               /* {driverData.map((driver, index) => { */
-    //             }
-    //             console.log(driver.DriverVersion);
-    //             return (
-    //               <tr key={index}>
-    //                 <th scope="row">{driver.DeviceName}</th>
-    //                 <th scope="row">{driver.DriverVersion}</th>
-    //                 {/* <th scope="row">{driver.DriverStatus}</th> */}
-    //               </tr>
-    //             );
-    //           })}
-    //         </tbody>
-    //       </table>
-    //     </div>
-    //   </div>
-    //   <div id="pagescanbottom" className="fixed-bottom">
-    //     <button className="btn btn-light designbtnbackup1 px-4" onClick={handleScanToggle}>
-    //       {isScanning ? "Stop Scan" : "Start Scan"}
-    //     </button>
-    //   </div>
-    //   {handleRedirect("scan-registry", 13000)}
-    // </>
-
     <>
-     <div>
-      <h1>Driver Information</h1>
-      <pre>{driverInfo}</pre>
-    </div>
-    
-    
+      <div className="StartScan flex justify-content-between">
+        <div>
+          <img src={giphy} alt="" className="imageofscan mr-3" />
+        </div>
+        <div>
+          <div className="progress">
+            <div className="progress-bar bg-primary" role="progressbar" style={{ width: `${percentage}%` }} aria-valuenow={percentage}aria-valuemin="0"  aria-valuemax="100"
+            >
+              <span>{percentage.toFixed()}%</span>
+            </div>
+          </div>
+          <span className="ml-16 text-xs mt-16">
+            {currentIndexs < driverData.length && (
+              <p className="dat">{driverData[currentIndexs].DeviceName}</p>
+            )}
+          </span>
+        </div>
+      </div>
+      <div className="mt-8">
+        <div
+          ref={fileListRef}
+          style={{ height: "250px", overflowY: "auto" }}
+          className="backupregistry1 tableclasses"
+        >
+          <table className="table table-hover tablescan">
+            <thead className="table-secondary fixed	 ">
+              <tr className="headdesign">
+                <th scope="col" colSpan="1">
+                  DriverName
+                </th>
+                <th scope="col">Version</th>
+              </tr>
+            </thead>
+            <tbody
+              className="overflow-y-scroll"
+              style={{ maxHeight: "200px", overflowY: "auto" }}
+            >
+              {Array.isArray(driverData) && driverData.slice(0, currentIndexs + 1).map((driver, index) => {
+               
+                // console.log("heyy here find meeeeeee",driver.DriverVersion);
+                return (
+                  <tr key={index}>
+                    <th scope="row">{driver.DeviceName}</th>
+                    <th scope="row">{driver.DriverVersion}</th>
+                    {/* <th scope="row">{driver.DriverStatus}</th> */}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="pagescanbottom" className="fixed-bottom">
+        <button className="btn btn-light designbtnbackup1 px-4" onClick={handleScanToggle}>
+          {isScanning ? "Stop Scan" : "Start Scan"}
+        </button>
+      </div>
+      {handleRedirect("scan-registry", 13000)}
     </>
+
+    // <>
+    //  <div>
+    //   <h1>Driver Information</h1>
+    //   <pre>{driverInfo}</pre>
+    // </div>
+    
+    
+    // </>
   ) : (
     <ScanRegistry />
   );

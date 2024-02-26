@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import intel from "../Image/intel.png";
 import minewin from "../Image/minewin.png";
 // import grapgics from "../Image/gragics.jpg"
+import { invoke } from '@tauri-apps/api/tauri';
+
 
 function Status() {
   const [cleanerStart, setCleanerStart] = useState("status");
@@ -170,8 +172,9 @@ function Status() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios("http://localhost:3000/getdrivers");
-        const driverinfo = await response.data;
+        const response = await invoke('mine_driver');
+        const driverinfo = JSON.parse(response);
+  
         setSystemInformation(driverinfo);
         console.log(driverinfo);
 
@@ -206,15 +209,17 @@ function Status() {
   }, []);
   useEffect(() => {
     const fetchSystemInfo = async () => {
+      const a =await invoke('__cmd__testing');
+      console.log(a)
       try {
-        const response = await axios.get("http://localhost:3000/systeminfo");
+        const response = await invoke('__cmd__testing');
         const data = response.data;
-        const diskInfoGB = data.diskInfo.map((size) => `${size} GB`);
+        const diskInfoGB = data.diskdrive.map((size) => `${size} GB`);
         const memoryInfoGB = data.memoryInfo.map((size) => `${size} GB`);
         setSystemInfo({
           cpuInfo: data.cpuInfo,
           osInfo: data.osInfo,
-          diskInfo: diskInfoGB,
+          diskdrive: diskInfoGB,
           memoryInfo: memoryInfoGB,
           videoControllerInfo: data.videoControllerInfo,
         });
@@ -320,7 +325,7 @@ function Status() {
                           Hard Drive{" "}
                         </div>{" "}
                         <h5 className="text-sm font-semibold font-sans whitespace-nowrap	">
-                          {systemInfo.diskInfo.join(", ")}
+                          {systemInfo.diskdrive.join(", ")}
                         </h5>
                       </h6>
                     </div>

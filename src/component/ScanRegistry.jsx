@@ -10,6 +10,7 @@ import Computer from "../Image/icons8-desktop-50.png";
 import Logo from "../Image/money-back-in-60-days-guarantee-badge-golden-medal-vector-20372626-removebg-preview.png";
 import axios from "axios";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { invoke } from '@tauri-apps/api/tauri';
 
 import giphy from "../Image/giphy.gif";
 
@@ -263,8 +264,8 @@ const handleupdateofdriver =(e)=>{
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios("http://localhost:3000/getdrivers");
-        const driverinfo = await response.data;
+       const response = await invoke('mine_driver');
+      const driverinfo = JSON.parse(response);
         setSystemInformation(driverinfo);
 
         const updatedComparisonResult = [];
@@ -453,6 +454,8 @@ const handleupdateofdriver =(e)=>{
                         </tr>
                       );
                     })}
+
+                    
                 </tbody>
               </table>
             </div>

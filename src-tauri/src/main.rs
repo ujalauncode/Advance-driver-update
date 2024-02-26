@@ -106,7 +106,6 @@ fn __cmd__testing() -> String {
 }
 
 
-
 // this is to check updates
 
 #[tauri::command]
@@ -144,8 +143,6 @@ fn __cmd__checkagain() -> String {
     }
 }
 
-
-
 // use std::process::Command;
 
 #[tauri::command]
@@ -174,9 +171,6 @@ fn __cmd__checkupdate() -> String {
         }
     }
 }
-
-
-
 
 fn main() {
     tauri::Builder::default()
