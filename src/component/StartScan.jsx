@@ -103,20 +103,7 @@ export default function StartScan({ value = 0 }) {
     // const c=await invoke('__cmd__checkagain')
 
 
-// useEffect(() => {
-//   async function fetchDriverInfo() {
 
-//     try {
-//       const response = await invoke('mine_driver');
-//       console.log("frontend drivers are===",response );
-//       setDriverInfo(response);
-//     } catch (error) {
-//       console.error('Error fetching driver info:', error);
-//     }
-//   }
-
-//   fetchDriverInfo();
-// }, []);
 
 
   return cleanerStatus === "status" ? (
@@ -142,7 +129,7 @@ export default function StartScan({ value = 0 }) {
       <div className="mt-8">
         <div
           ref={fileListRef}
-          style={{ height: "250px", overflowY: "auto" }}
+          style={{ height: "222px", overflowY: "auto" }}
           className="backupregistry1 tableclasses"
         >
           <table className="table table-hover tablescan">
@@ -156,7 +143,7 @@ export default function StartScan({ value = 0 }) {
             </thead>
             <tbody
               className="overflow-y-scroll"
-              style={{ maxHeight: "200px", overflowY: "auto" }}
+              style={{ maxHeight: "160px", overflowY: "auto" }}
             >
               {Array.isArray(driverData) && driverData.slice(0, currentIndexs + 1).map((driver, index) => {
                
@@ -177,7 +164,7 @@ export default function StartScan({ value = 0 }) {
           {isScanning ? "Stop Scan" : "Start Scan"}
         </button>
       </div>
-      {handleRedirect("scan-registry", 13000)}
+      {handleRedirect("scan-registry", 1300000)}
     </>
   ) : (
     <ScanRegistry />

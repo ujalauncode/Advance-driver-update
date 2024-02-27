@@ -40,71 +40,142 @@ fn mine_driver() -> Result<String, String> {
 
 // this is for system info
 
+
+use serde::Serialize;
+
+#[derive(Serialize)]
+struct SystemInfo {
+    os_info: String,
+    cpu_info: String,
+    disk_info: String,
+    video_controller_info: String,
+    product_id: String, // Include Product ID field
+    memory_info: String, // Include Memory field
+    // Add other fields as needed
+}
+
 #[tauri::command]
-fn __cmd__testing() -> String {
+fn __cmd__testing() -> SystemInfo {
     use std::process::Command;
 
-    let output_system_info = Command::new("SystemInfo")
-        .output()
-        .expect("Failed to execute command");
-
-    let output_str_system_info = String::from_utf8_lossy(&output_system_info.stdout);
-
-    let output_os_info = Command::new("wmic")
+    let os_info = Command::new("wmic")
         .args(&["os", "get", "Caption"])
         .output()
         .expect("Failed to execute command");
+    let os_info_str = String::from_utf8_lossy(&os_info.stdout).trim().to_string();
 
-    let output_str_os_info = String::from_utf8_lossy(&output_os_info.stdout);
-
-    let output_cpu_info = Command::new("wmic")
+    let cpu_info = Command::new("wmic")
         .args(&["cpu", "get", "name"])
         .output()
         .expect("Failed to execute command");
+    let cpu_info_str = String::from_utf8_lossy(&cpu_info.stdout).trim().to_string();
 
-    let output_str_cpu_info = String::from_utf8_lossy(&output_cpu_info.stdout);
-
-    let output_disk_info = Command::new("wmic")
+    let disk_info = Command::new("wmic")
         .args(&["diskdrive", "get", "size"])
         .output()
         .expect("Failed to execute command");
+    let disk_info_str = String::from_utf8_lossy(&disk_info.stdout).trim().to_string();
 
-    let output_str_disk_info = String::from_utf8_lossy(&output_disk_info.stdout);
-
-    let output_video_controller_info = Command::new("wmic")
+    let video_controller_info = Command::new("wmic")
         .args(&["path", "Win32_VideoController", "get", "name"])
         .output()
         .expect("Failed to execute command");
+    let video_controller_info_str = String::from_utf8_lossy(&video_controller_info.stdout).trim().to_string();
 
-    let output_str_video_controller_info = String::from_utf8_lossy(&output_video_controller_info.stdout);
+    let product_id = Command::new("wmic")
+        .args(&["bios", "get", "serialnumber"])
+        .output()
+        .expect("Failed to execute command");
+    let product_id_str = String::from_utf8_lossy(&product_id.stdout).trim().to_string();
 
-    let mut extracted_info = String::new();
+    let memory_info = Command::new("wmic")
+        .args(&["memorychip", "get", "Capacity"])
+        .output()
+        .expect("Failed to execute command");
+    let memory_info_str = String::from_utf8_lossy(&memory_info.stdout).trim().to_string();
 
-    for line in output_str_system_info.lines() {
-        if line.starts_with("OS Name:")
-            || line.starts_with("Processor(s):")
-            || line.starts_with("Total Physical Memory:")
-            || line.starts_with("Product ID:")
-        {
-            extracted_info.push_str(line);
-            extracted_info.push('\n');
-        }
+    SystemInfo {
+        os_info: os_info_str,
+        cpu_info: cpu_info_str,
+        disk_info: disk_info_str,
+        video_controller_info: video_controller_info_str,
+        product_id: product_id_str,
+        memory_info: memory_info_str,
     }
-
-    extracted_info.push_str("OS Info:\n");
-    extracted_info.push_str(&output_str_os_info);
-
-    extracted_info.push_str("CPU Info:\n");
-    extracted_info.push_str(&output_str_cpu_info);
-
-    extracted_info.push_str("Disk Info:\n");
-    extracted_info.push_str(&output_str_disk_info);
-
-    extracted_info.push_str("Video Controller Info:\n");
-    extracted_info.push_str(&output_str_video_controller_info);
-
-    extracted_info
 }
+
+
+
+
+
+
+
+
+// #[tauri::command]
+// fn __cmd__testing() -> String {
+//     use std::process::Command;
+
+//     let output_system_info = Command::new("SystemInfo")
+//         .output()
+//         .expect("Failed to execute command");
+
+//     let output_str_system_info = String::from_utf8_lossy(&output_system_info.stdout);
+
+//     let output_os_info = Command::new("wmic")
+//         .args(&["os", "get", "Caption"])
+//         .output()
+//         .expect("Failed to execute command");
+
+//     let output_str_os_info = String::from_utf8_lossy(&output_os_info.stdout);
+
+//     let output_cpu_info = Command::new("wmic")
+//         .args(&["cpu", "get", "name"])
+//         .output()
+//         .expect("Failed to execute command");
+
+//     let output_str_cpu_info = String::from_utf8_lossy(&output_cpu_info.stdout);
+
+//     let output_disk_info = Command::new("wmic")
+//         .args(&["diskdrive", "get", "size"])
+//         .output()
+//         .expect("Failed to execute command");
+
+//     let output_str_disk_info = String::from_utf8_lossy(&output_disk_info.stdout);
+
+//     let output_video_controller_info = Command::new("wmic")
+//         .args(&["path", "Win32_VideoController", "get", "name"])
+//         .output()
+//         .expect("Failed to execute command");
+
+//     let output_str_video_controller_info = String::from_utf8_lossy(&output_video_controller_info.stdout);
+
+//     let mut extracted_info = String::new();
+
+//     for line in output_str_system_info.lines() {
+//         if line.starts_with("OS Name:")
+//             || line.starts_with("Processor(s):")
+//             || line.starts_with("Total Physical Memory:")
+//             || line.starts_with("Product ID:")
+//         {
+//             extracted_info.push_str(line);
+//             extracted_info.push('\n');
+//         }
+//     }
+
+//     extracted_info.push_str("OS Info:\n");
+//     extracted_info.push_str(&output_str_os_info);
+
+//     extracted_info.push_str("CPU Info:\n");
+//     extracted_info.push_str(&output_str_cpu_info);
+
+//     extracted_info.push_str("Disk Info:\n");
+//     extracted_info.push_str(&output_str_disk_info);
+
+//     extracted_info.push_str("Video Controller Info:\n");
+//     extracted_info.push_str(&output_str_video_controller_info);
+
+//     extracted_info
+// }
 
 
 // this is to check updates

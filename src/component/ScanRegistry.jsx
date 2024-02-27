@@ -189,6 +189,7 @@ const [updateCompleted, setUpdateCompleted] = useState(false);
 const [driversUpdated, setDriversUpdated] = useState(false);
 const [outdatedDriverCount, setOutdatedDriverCount] = useState(0);
 
+
 useEffect(() => {
   if (isScanning) {
       const intervalId = setInterval(() => {
@@ -387,30 +388,33 @@ useEffect(() => {
 
 
 
-  const handleSelect = (e) => {
-    const { name, checked } = e.target;
-    let tempDrivers;
-  
-    if (name === "allselect") {
-      tempDrivers = comparisonResult.map((driver) => {
-        return { ...driver, ischecked: checked };
-      });
-    } else {
-      tempDrivers = comparisonResult.map((driver) =>
-        driver.name === name ? { ...driver, ischecked: checked } : driver
-      );
-    }
-  
-    setComparisonResult(tempDrivers);
-    const selectedOutdatedCount = tempDrivers.filter((driver) => driver.ischecked && driver.DriverStatus === "Outdated").length;
-    setSelectedCount(selectedOutdatedCount);
-  };
+const handleSelect = (e) => {
+  const { name, checked } = e.target;
+
+  let tempDrivers;
+
+  if (name === "allselect") {
+    tempDrivers = systemInformation.map((driver) => {
+      return { ...driver, ischecked: checked };
+    });
+  } else {
+    tempDrivers = systemInformation.map((driver) =>
+      driver.name === name ? { ...driver, ischecked: checked } : driver
+    );
+  }
+
+  setSystemInformation(tempDrivers);
+  const selectedOutdatedCount = tempDrivers.filter((driver) => driver.ischecked && driver.DriverStatus === "Outdated").length;
+  setSelectedCount(selectedOutdatedCount);
+};
+
+
   const updatedrive = () => {
     if (!showdriver) {
       setShowdriver(true);
       setIsScanning(true);
       setTimeout(()=>{
-        handleUpdate();
+      handleUpdate();
       },10000)
       setHide(false);
     }
@@ -465,7 +469,6 @@ useEffect(() => {
                 </thead>
                 <tbody>
                   {
-                  // comparisonResult.length > 0 
                   
                   systemInformation && systemInformation.map((driver, i) => {
                       return (
@@ -517,8 +520,6 @@ useEffect(() => {
                         </tr>
                       );
                     })}
-
-                    
                 </tbody>
               </table>
             </div>
@@ -741,38 +742,33 @@ useEffect(() => {
 {/* for update popup  */}
       {showdriver && (
         <div className="exclusion-maintesting">
-        <h1 style={{ marginLeft: "10px", marginTop: "7px" }} className="font-extrabold">
-                 <b>Update all your drivers in minutes</b>
+          <div className="upedit">
+               <h1 style={{ marginLeft: "10px" }} className="font-extrabold pt-2">
+                 <b className="text-white">Update all your drivers in minutes</b>
                 </h1>
                 <div onClick={(e) => setShowdriver(false)}>
                   <span className="closeagain "></span>
-               </div>    
+                  </div>   
+          </div>             
      <div className="minenewpop">
-     {/* <span className="sp">your driverName if you want to update click Update Now</span> */}
-     <div className="flex place-content-evenly mt-2 text-xs">
-     <span className=""> Device Name : WAN Miniport (Network Monitor)</span>
-       <span>Version:f8458475429</span>
-       <span>{currentDate}</span>
+     <div className="flex place-content-evenly mt-2 text-xs pt-2">
+   
+     <span className=""> Device Name : WAN Miniport (Network Monitor)</span>      
      </div>
      <div className="StartScan flex justify-content-between">
-        <div className="mt-2">
-          <img src={giphy} alt="" className="imageofscan mr-3" />
-        </div>
+      
         <div>
           <div className="progress11">
             <div className="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style={{ width: `${percentage}%` }}
-              aria-valuenow={percentage} >
-            
-              <span>{percentage.toFixed()}%</span>
-          
+              aria-valuenow={percentage} >          
+              <span>{percentage.toFixed()}%</span> 
             </div>
-
           </div>
-            {updateCompleted && (
-                <div className="update-completed-message text-black mssg">
-                    Drivers updated successfully!
-                </div>
-            )}
+          {percentage === 100 && (
+        <div className="update-completed-message text-black mssg">
+          Status: Up to date
+        </div>
+      )}
         </div>
       </div>
      </div>

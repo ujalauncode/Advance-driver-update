@@ -20,7 +20,7 @@ function Dafrag({ currentDate, setCurrentDate }) {
   const [showBackupMessage, setShowBackupMessage] = useState(false);
   const [driversCount, setDriversCount] = useState(null);
   const[isBackupComplete,setIsBackupComplete]=useState()
-  const [totalcount, setTotalCount] = useState(null);
+  const [totalCount, setTotalCount] = useState(null);
 
   const Tauri = window.__TAURI__;
 
@@ -34,12 +34,10 @@ function Dafrag({ currentDate, setCurrentDate }) {
 
   const handleScanToggle = () => {
     if (isScanning) {
-      // Stop scanning
       setIsScanning(false);
       clearInterval(scanInterval);
       setScanInterval(null); // Clear the stored interval ID
     } else {
-      // Start or resume scanning
       setIsScanning(true);
 
       const interval = setInterval(() => {
@@ -58,55 +56,67 @@ function Dafrag({ currentDate, setCurrentDate }) {
     }
   };
   
-  const getTotalCount = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/totalcount");
-      setTotalCount(response.data.totalCount);
-    } catch (error) {
-      console.error("Error getting total count:", error);
-    }
-  };
-  
-useEffect(()=>{
-  getTotalCount()
-})
-
   let initialScanInterval;
 
- // Empty dependency array ensures the effect runs only once on mount
-
   const backupdata = async () => {
+    console.log("fetch data running");
     try {
-      const response = await axios.post("http://localhost:3000/backupall");
-      const newDriverData = response.data;
-      setDriverData(newDriverData.driversCount);
-      setDriversCount(newDriverData.driversCount.length)
-      console.log( "new driver data =",newDriverData)
-      setCurrentIndexs(0); 
-      setIsBackupComplete(false);
-      const newDate = new Date().toString();
+      const response = await invoke('mine_driver');
+      const newDriverData = JSON.parse(response);
 
-      initialScanInterval = setInterval(() => {
-        if (isScanning && !isBackupComplete) {
-          setIsScanning(true);
+      setDriverData(newDriverData);
+      setDriversCount(newDriverData.length)
+      console.log(newDriverData)
+      setCurrentIndexs(0);
+      console.log("get driver route");
+        const intervalId = setInterval(() => {
+        console.log("setInterval");
+        if (isScanning) {
           setPercentage((prevPercentage) =>
-            Math.min(prevPercentage + 100 / newDriverData.driversCount.length, 100)
+            Math.min(prevPercentage + 100 / newDriverData.length, 100)
           );
           setCurrentIndexs((prevIndex) => prevIndex + 1);
-          if (currentIndexs >= newDriverData.driversCount.length) {
-            clearInterval(initialScanInterval);
+            if (currentIndexs >= newDriverData.length) {
+            clearInterval(intervalId);
             setPercentage(100);
-            setIsBackupComplete(true);
+            handleRedirect("scan-registry", 3000);
           }
         }
-      }, 100);
+      },100);
+      // await axios.post('http://localhost:3000/backupall', {
+        
+      //         driversCount: newDriverData.driversCount,
+      //         driverData: newDriverData 
+      //       });
 
-      console.log("Initial interval id =", initialScanInterval);
-      return () => clearInterval(initialScanInterval);
+      postBackupData(); 
+
+      setScanInterval(intervalId);
+      console.log("first interval id =", intervalId);
+  
+      // Clear interval when component unmounts
+      return () => clearInterval(intervalId);
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+
+    const postBackupData = async () => {
+      try {
+        await axios.post('http://localhost:3000/backupall', {
+          driversCount: totalCount, // Use the totalCount state directly
+        });
+        setTotalCount(driversCount)
+        console.log('Data posted successfully');
+      } catch (error) {
+        console.error("Error posting backup data:", error);
+      }
+    };
+  
+  
+
+  
   useEffect(() => {
     if (percentage === 100) {
       const timeoutId = setTimeout(() => {
@@ -186,11 +196,10 @@ useEffect(()=>{
                   </div>
                 </div>
                 <span className="ml-16 text-xs mt-16">
-                  {currentIndexs < driverData.length && (
-                    <p className="dat">                    
-                      {driverData[currentIndexs].DeviceName}
-                    </p>
-                  )}
+                {currentIndexs < driverData.length && (
+              <p className="dat">{driverData[currentIndexs].DeviceName}</p>
+            )}
+                
                 </span>
               </div>
              
@@ -208,7 +217,7 @@ useEffect(()=>{
           </div>
           <div className="flex justify-content-between mx-10 a">
           <p> Drivers Selected For Backup: </p>
-          <span>{totalcount} drivers</span>
+          <span>{driversCount} drivers</span>
 
           </div>
           <div className="flex justify-content-between mx-10 a">

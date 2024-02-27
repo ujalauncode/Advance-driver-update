@@ -7,7 +7,6 @@ import Clock from "../Image/icons8-clock-50.png";
 import Calendar from "../Image/icons8-calendar-50.png";
 import Computer from "../Image/icons8-desktop-50.png";
 import Logo from "../Image/money-back-in-60-days-guarantee-badge-golden-medal-vector-20372626-removebg-preview.png";
-
 export default function BackupRegistry() {
   const [backupType, setBackupType] = useState(null);
   const [backupDate, setBackupDate] = useState([]);
@@ -28,39 +27,6 @@ const [mydriver,setmydriver]=useState([])
     });
   };
 
-
-  // useEffect(() => {
-  //   const fetchLatestBackupDates = async () => {
-  //     try {
-  //       const res = await axios.get("http://localhost:3000/backupdate");
-
-  //       console.log("res data =",res.data.latestBackupDates)
-  
-  //       if (res.data.latestBackupDates && res.data.latestBackupDates.length > 0) {
-  //         // Filter out unique dates
-  //         const uniqueDates = res.data.latestBackupDates.filter(
-  //           (date, index, self) => self.indexOf(date) === index
-  //         );
-
-  //         console.log("uniqueDates data =",uniqueDates)
-  
-  //         if (uniqueDates.length !== res.data.latestBackupDates.length) {
-  //           alert("same date backup already done !!");
-  //         }
-  
-  //         // Update state with unique dates
-  //         setLatestBackupDates(uniqueDates);
-  //       } else {
-  //         console.log("No valid backup dates found in the database");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching latest backup dates:", error);
-  //     }
-  //   };
-  
-  //   fetchLatestBackupDates();
-  // }, []);
-  
   
   useEffect(() => {
     async function fetchBackupDates() {
@@ -71,7 +37,6 @@ const [mydriver,setmydriver]=useState([])
         setError('Error fetching backup dates: ' + error.message);
       } 
     }
-
     fetchBackupDates();
   }, []);
 
@@ -90,6 +55,7 @@ const [mydriver,setmydriver]=useState([])
       console.error("Error deleting backup date:", error);
     }
   };
+
   const handleload = async () => {
     if(!show){  
      setShow(true)

@@ -566,10 +566,11 @@ th{
 .progress11 {
   margin: 18px 17px -36px 14px;
   height: 28px;
-  width: 54vw;
+  width: 63vw;
   background-color: rgb(233, 236, 239);
-  border-radius: 4px;
   border: 1px solid #c4c4c4;
+
+  /* background-color: var(--bs-link-color); */
 }
 
 
@@ -583,8 +584,9 @@ th{
   display: inline-block;
 }
 .progress-bar {
-  background-color: #5468ff;
+  background-color: #2a7c35;
   color: #fff;
+  height: 28px;
 }
 
 .firstregistrysection {
@@ -1659,9 +1661,11 @@ table {
   justify-content: end !important;
   height: 60px !important;
   width: 69% !important;
-  margin-bottom: 100px;
+  margin-bottom: 134px;
   margin-left: 120px;
-  background: rgb(245, 241, 241);
+  background: white;
+  border-left: black solid 1px;
+  border-right: black solid 1px;
 }
 
 
@@ -1718,14 +1722,14 @@ font-size: 13px;
   margin-left: 20px;
   height: 35px;
   margin-top: 7px;
-  font-weight: 500;
+  font-weight: 700;
   margin-top: 16px;
-  border: #3c4fe0 1px solid;
-  color: #3c4fe0;
+  background-color:#2a7c35 !important;
+  color: #e7e8f2 !important;
   padding-left: 28px;
   padding-right: 28px;
-  padding-right: 40px !important;
-  padding-left: 40px !important;
+  padding-right: 54px !important;
+  padding-left: 54px !important;
   /* background-image: linear-gradient(rgb(200, 197, 197), white); */
 font-size: 13px;
 }
@@ -2077,7 +2081,7 @@ td, th {
   z-index: 9999;
   background: whitesmoke;
   left: 9%;
-  top: 16%;
+  top: 22%;
   width: 79vw;
   height: 369px;
   font-family: sans-serif;
@@ -2087,14 +2091,14 @@ td, th {
 .exclusion-maintesting{
   position: absolute;
   z-index: 9999;
-  background: rgb(245, 241, 241);
+  background: white;
   left: 15%;
-  top: 50%;
+  top: 45%;
   width: 69vw;
   height: 200px;
   color:rgb(0, 0, 0) ;
   font-family: sans-serif;
-  border: white 1px;
+  border: black  solid 1px;
 }
 
 
@@ -2151,7 +2155,7 @@ td, th {
   content: ' ';
   height: 20px;
   width: 2px;
-  background-color: #000000;
+  background-color: #f7eeee;
 }
 .closeagain:before {
   transform: rotate(45deg);
@@ -2262,10 +2266,7 @@ margin: -57px 0 0px 0 !important;
   font-size: 0.75rem;
   line-height: 11px !important;
 }
-.minenewpop{
-  border-top: rgb(255, 166, 23)  solid;
-  margin-top: 10px;
-}
+
 
 
 
@@ -2491,4 +2492,12 @@ footer {
 }
 .mtgiven{
   margin-top: 60px;
+}
+
+.upedit{
+  height: 40px;
+  width: 551px;
+  background-color: black;
+  margin-top: 0px;
+
 }
