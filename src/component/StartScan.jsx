@@ -56,19 +56,14 @@ export default function StartScan({ value = 0 }) {
       console.log(newDriverData)
       setCurrentIndexs(0);
       console.log("get driver route");
-  
-      // Start scanning interval
-      const intervalId = setInterval(() => {
+        const intervalId = setInterval(() => {
         console.log("setInterval");
         if (isScanning) {
-          // Update percentage and currentIndexs
           setPercentage((prevPercentage) =>
             Math.min(prevPercentage + 100 / newDriverData.length, 100)
           );
           setCurrentIndexs((prevIndex) => prevIndex + 1);
-  
-          // Check if scanning is complete
-          if (currentIndexs >= newDriverData.length) {
+            if (currentIndexs >= newDriverData.length) {
             clearInterval(intervalId);
             setPercentage(100);
             handleRedirect("scan-registry", 3000);
@@ -84,6 +79,10 @@ export default function StartScan({ value = 0 }) {
       console.error("Error:", error);
     }
   };
+
+ 
+
+
   const scrollToFileEnd = () => {
     const fileList = fileListRef.current;
     if (fileList) {
@@ -161,7 +160,6 @@ export default function StartScan({ value = 0 }) {
             >
               {Array.isArray(driverData) && driverData.slice(0, currentIndexs + 1).map((driver, index) => {
                
-                // console.log("heyy here find meeeeeee",driver.DriverVersion);
                 return (
                   <tr key={index}>
                     <th scope="row">{driver.DeviceName}</th>
@@ -181,15 +179,6 @@ export default function StartScan({ value = 0 }) {
       </div>
       {handleRedirect("scan-registry", 13000)}
     </>
-
-    // <>
-    //  <div>
-    //   <h1>Driver Information</h1>
-    //   <pre>{driverInfo}</pre>
-    // </div>
-    
-    
-    // </>
   ) : (
     <ScanRegistry />
   );

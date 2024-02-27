@@ -168,7 +168,9 @@ function Status() {
     "Volume Manager": "10.0.22621.2506",
   });
   const [comparisonResult, setComparisonResult] = useState([]);
-  const [lastScanDateTime, setLastScanDateTime] = useState(null); // New state for last scan date and time
+  const [lastScanDateTime, setLastScanDateTime] = useState(null); 
+  const [latestBackupDates, setLatestBackupDates] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -229,6 +231,23 @@ function Status() {
     };
     fetchSystemInfo();
   }, []);
+
+  // useEffect(() => {
+  //   async function fetchBackupDates() {
+  //     try {
+  //       const response = await axios.get('http://localhost:3000/backupdate');
+  //       setLatestBackupDates(response.data.sortedData);
+  //     } catch (error) {
+  //       setError('Error fetching backup dates: ' + error.message);
+  //     } 
+  //   }
+
+  //   fetchBackupDates();
+  // }, []);
+
+
+
+
   return cleanerStart === "status" ? (
     <>
       <div className="container-fluid">
@@ -250,9 +269,12 @@ function Status() {
                       }{" "}
                       outdated driver found
                     </h3>
+                    {latestBackupDates.length > 0 && (
+
                     <h6 className="text-xs font-medium">
-                      Last Scan : {lastScanDateTime}{" "}
+                      Last Scan : {" "}
                     </h6>
+                    )}
                     <h6 className="text-xs font-medium ">
                       Recommended Action:
                     </h6>

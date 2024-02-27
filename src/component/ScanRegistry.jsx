@@ -26,157 +26,158 @@ const[show, setShow]=useState(false)
   const [driverCount, setDriverCount] = useState(0);
   const [selectedCount, setSelectedCount] = useState(0);
   const currentDate = new Date().toLocaleDateString();
-  const [systemInformation, setSystemInformation] = useState({
-    "WAN Miniport (Network Monitor)": "10.0.22621.3",
-    "WAN Miniport (IPv6)": "10.0.22621.3",
-    "WAN Miniport (IP)": "10.0.22621.1",
-    "WAN Miniport (PPPOE)": "10.0.22621.1",
-    "WAN Miniport (PPTP)": "10.0.22621.1",
-    "WAN Miniport (L2TP)": "10.0.22621.1",
-    "WAN Miniport (IKEv2)": "10.0.22621.1",
-    "WAN Miniport (SSTP)": "10.0.22621.1",
-    "Generic software device": "10.0.22621.1",
-    "Local Print Queue": "10.0.22621.1",
-    "Local Print Queue": "10.0.22621.1",
-    "Local Print Queue": "10.0.22621.1",
-    "Generic software device": "10.0.22621.1",
-    "Generic software device": "10.0.22621.1",
-    "Generic software device": "10.0.22621.1",
-    "Generic software device": "10.0.22621.1",
-    "Generic software device": "10.0.22621.1",
-    "Computer Device": "10.0.22621.1",
-    "Remote Desktop Device Redirector Bus": "10.0.22621.2506",
-    "Plug and Play Software Device Enumerator": "10.0.22621.1",
-    "Microsoft System Management BIOS Driver": "10.0.22621.1",
-    "NDIS Virtual Network Adapter Enumerator": "10.0.22621.1",
-    "Microsoft Hyper-V Virtual Disk Server": "10.0.22621.2506",
-    "Microsoft Basic Render Driver": "10.0.22621.2506",
-    "Microsoft Hyper-V PCI Server": "10.0.22621.1",
-    "Acer Inc. System Firmware 1.26": "5.42.1.26",
-    "Microsoft UEFI-Compliant System": "10.0.22621.1",
-    "ACPI Thermal Zone": "10.0.22621.1",
-    "ACPI Fan": "10.0.22621.1",
-    "ACPI Fan": "10.0.22621.1",
-    "ACPI Fan": "10.0.22621.1",
-    "ACPI Fan": "10.0.22621.1",
-    "ACPI Fan": "10.0.22621.1",
-    "Motherboard resources": "10.0.22621.1",
-    "Trusted Platform Module 2.0": "10.0.22621.2506",
-    "HID-compliant wireless radio controls": "10.0.22621.2506",
-    "Acer Airplane Mode Controller": "1.0.0.10",
-    "HID-compliant system controller": "10.0.22621.2506",
-    "HID-compliant consumer control device": "10.0.22621.1",
-    "HID Keyboard Device": "10.0.22621.1",
-    "Converted Portable Device Control device": "10.0.22621.1",
-    "Portable Device Control device": "10.0.22621.1",
-    "Intel(R) HID Event Filter": "2.2.1.384",
-    "ACPI Power Button": "10.0.22621.1",
-    "Intel(R) Power Engine Plug-in": "10.0.22621.2792",
-    "Microsoft Windows Management Interface for ACPI": "10.0.22621.1",
-    "Microsoft Windows Management Interface for ACPI": "10.0.22621.1",
-    "ACPI Processor Aggregator": "10.0.22621.1",
-    "Intel Processor": "10.0.22621.2506",
-    "Intel Processor": "10.0.22621.2506",
-    "Intel Processor": "10.0.22621.2506",
-    "Intel Processor": "10.0.22621.2506",
-    "ACPI Sleep Button": "10.0.22621.1",
-    "Motherboard resources": "10.0.22621.1",
-    "Intel(R) Serial IO GPIO Host Controller - INT34C5": "30.100.2031.2",
-    "Motherboard resources": "10.0.22621.1",
-    "Motherboard resources": "10.0.22621.1",
-    "Microsoft Windows Management Interface for ACPI": "10.0.22621.1",
-    "Motherboard resources": "10.0.22621.1",
-    "Intel(R) SPI (flash) Controller - A0A4": "10.1.24.5",
-    "Intel(R) SMBus - A0A3": "10.1.24.5",
-    "Audio Endpoint": "10.0.22621.1",
-    "Realtek Audio Effects Component": "13.247.1124.210",
-    "Intel® Smart Sound Technology for Digital Microphones": "10.29.0.9677",
-    "Intel® Smart Sound Technology for Bluetooth® Audio": "10.29.0.9677",
-    "Intel® Smart Sound Technology for USB Audio": "10.29.0.9677",
-    "Audio Endpoint": "10.0.22621.1",
-    "Realtek Audio Universal Service": "1.0.668.0",
-    "Realtek Hardware Support Application": "11.0.6000.313",
-    "Realtek Audio Effects Component": "13.0.6000.1097",
-    "Realtek Audio": "6.0.9601.1",
-    "Intel® Smart Sound Technology Detection Verification": "1.0.3045.0",
-    "Intel® Smart Sound Technology OED": "10.29.0.9677",
-    "Intel® Smart Sound Technology BUS": "10.29.0.9677",
-    "ACPI Lid": "10.0.22621.1",
-    "Microsoft AC Adapter": "10.0.22621.1",
-    "Microsoft ACPI-Compliant Control Method Battery": "1.0.0.6",
-    "Microsoft ACPI-Compliant Embedded Controller": "10.0.22621.1",
-    "Standard PS/2 Keyboard": "10.0.22621.1",
-    "Motherboard resources": "10.0.22621.1",
-    "System timer": "10.0.22621.1",
-    "System CMOS/real time clock": "10.0.22621.1",
-    "Motherboard resources": "10.0.22621.1",
-    "Programmable interrupt controller": "10.0.22621.1",
-    "High precision event timer": "10.0.22621.1",
-    "Intel(R) LPC Controller/eSPI Controller (U Premium...": "10.1.24.5",
-    "Realtek PCIe GbE Family Controller": "10.63.1014.2022",
-    "Intel(R) PCI Express Root Port #9 - A0B0": "10.1.24.5",
-    "Intel(R) Serial IO I2C Host Controller - A0C6": "30.100.2031.2",
-    "Intel(R) Serial IO I2C Host Controller - A0C5": "30.100.2031.2",
-    "Intel RST VMD Managed Controller 09AB": "18.6.1.1016",
-    "Intel(R) Management and Security Application Local...": "2130.1.16.1",
-    "Intel(R) iCLS Client": "1.63.1155.1",
-    "Intel(R) Dynamic Application Loader Host Interface": "1.41.2021.121",
-    "Intel(R) Management Engine Interface #1": "2040.100.0.1029",
-    "Microsoft Input Configuration Device": "10.0.22621.1",
-    "HID-compliant touch pad": "10.0.22621.2506",
-    "HID-compliant vendor-defined device": "10.0.22621.2506",
-    "HID-compliant mouse": "10.0.22621.1",
-    "I2C HID Device": "10.0.22621.2506",
-    "Intel(R) Serial IO I2C Host Controller - A0EB": "30.100.2031.2",
-    "Intel(R) Serial IO I2C Host Controller - A0E8": "30.100.2031.2",
-    "Microsoft Wi-Fi Direct Virtual Adapter": "10.0.22621.1",
-    "Microsoft Wi-Fi Direct Virtual Adapter": "10.0.22621.1",
-    "Intel(R) Wireless-AC 9560 160MHz": "22.10.0.7",
-    "PCI standard RAM Controller": "10.0.22621.1",
-    "Microsoft Bluetooth LE Enumerator": "10.0.22621.2506",
-    "Bluetooth Device (Personal Area Network)": "10.0.22621.2506",
-    "Bluetooth Device": "10.0.22621.3007",
-    "Bluetooth Device": "10.0.22621.3007",
-    "Microsoft Bluetooth Hands-Free Profile AudioGatewa...": "10.0.22621.1",
-    "Microsoft Bluetooth Hands-Free Profile AudioGatewa...": "10.0.22621.1",
-    "Microsoft Bluetooth Avrcp Transport Driver": "10.0.22621.2506",
-    "Microsoft Bluetooth Avrcp Transport Driver": "10.0.22621.2506",
-    "Microsoft Bluetooth A2dp Source": "10.0.22621.1",
-    "Microsoft Bluetooth A2dp Source": "10.0.22621.1",
-    "Microsoft Bluetooth Enumerator": "10.0.22621.3007",
-    "Bluetooth Device (RFCOMM Protocol TDI)": "10.0.22621.2506",
-    "Intel(R) Wireless Bluetooth(R)": "22.230.0.2",
-    "WinUsb Device": "10.0.22621.2506",
-    "USB Video Device": "10.0.22621.2506",
-    "USB Composite Device": "10.0.22621.2506",
-    "USB Root Hub (USB 3.0)": "10.0.22621.2861",
-    "USB xHCI Compliant Host Controller": "10.0.22621.2506",
-    "Intel(R) Optane(TM) Memory and Storage Management ...": "18.6.1.1016",
-    "Generic software component": "10.0.22621.1",
-    "Disk drive": "10.0.22621.2506",
-    "Intel RST VMD Controller 9A0B": "18.6.1.1016",
-    "Intel(R) GNA Scoring Accelerator module": "2.0.0.1097",
-    "Generic PnP Monitor": "10.0.22621.2506",
-    "Intel(R) Graphics Command Center": "30.0.101.1404",
-    "Intel(R) Graphics Control Panel": "30.0.101.1404",
-    "Intel(R) UHD Graphics": "30.0.101.1404",
-    "PCI standard host CPU bridge": "10.0.22621.1",
-    "PCI Express Root Complex": "10.0.22621.2861",
-    "Microsoft ACPI-Compliant System": "10.0.22621.2792",
-    "ACPI x64-based PC": "10.0.22621.1",
-    "Charge Arbitration Driver": "10.0.22621.1",
-    "UMBus Root Bus Enumerator": "10.0.22621.2506",
-    "Microsoft Storage Spaces Controller": "10.0.22621.2792",
-    "Microsoft Virtual Drive Enumerator": "10.0.22621.1",
-    "Composite Bus Enumerator": "10.0.22621.1",
-    "Microsoft Hyper-V Virtualization Infrastructure Dr...": "10.0.22621.2715",
-    "Microsoft Hypervisor Service": "10.0.22621.2506",
-    "Microsoft Basic Display Driver": "10.0.22621.1",
-    "Microsoft Hyper-V Virtual Machine Bus Provider": "10.0.22621.2506",
-    "Volume": "10.0.22621.1",
-    "Generic volume shadow copy": "10.0.22621.1",
-    "Volume Manager": "10.0.22621.2506",
-  });
+  const [systemInformation, setSystemInformation] = useState()
+  // const [systemInformation, setSystemInformation] = useState({
+  //   "WAN Miniport (Network Monitor)": "10.0.22621.3",
+  //   "WAN Miniport (IPv6)": "10.0.22621.3",
+  //   "WAN Miniport (IP)": "10.0.22621.1",
+  //   "WAN Miniport (PPPOE)": "10.0.22621.1",
+  //   "WAN Miniport (PPTP)": "10.0.22621.1",
+  //   "WAN Miniport (L2TP)": "10.0.22621.1",
+  //   "WAN Miniport (IKEv2)": "10.0.22621.1",
+  //   "WAN Miniport (SSTP)": "10.0.22621.1",
+  //   "Generic software device": "10.0.22621.1",
+  //   "Local Print Queue": "10.0.22621.1",
+  //   "Local Print Queue": "10.0.22621.1",
+  //   "Local Print Queue": "10.0.22621.1",
+  //   "Generic software device": "10.0.22621.1",
+  //   "Generic software device": "10.0.22621.1",
+  //   "Generic software device": "10.0.22621.1",
+  //   "Generic software device": "10.0.22621.1",
+  //   "Generic software device": "10.0.22621.1",
+  //   "Computer Device": "10.0.22621.1",
+  //   "Remote Desktop Device Redirector Bus": "10.0.22621.2506",
+  //   "Plug and Play Software Device Enumerator": "10.0.22621.1",
+  //   "Microsoft System Management BIOS Driver": "10.0.22621.1",
+  //   "NDIS Virtual Network Adapter Enumerator": "10.0.22621.1",
+  //   "Microsoft Hyper-V Virtual Disk Server": "10.0.22621.2506",
+  //   "Microsoft Basic Render Driver": "10.0.22621.2506",
+  //   "Microsoft Hyper-V PCI Server": "10.0.22621.1",
+  //   "Acer Inc. System Firmware 1.26": "5.42.1.26",
+  //   "Microsoft UEFI-Compliant System": "10.0.22621.1",
+  //   "ACPI Thermal Zone": "10.0.22621.1",
+  //   "ACPI Fan": "10.0.22621.1",
+  //   "ACPI Fan": "10.0.22621.1",
+  //   "ACPI Fan": "10.0.22621.1",
+  //   "ACPI Fan": "10.0.22621.1",
+  //   "ACPI Fan": "10.0.22621.1",
+  //   "Motherboard resources": "10.0.22621.1",
+  //   "Trusted Platform Module 2.0": "10.0.22621.2506",
+  //   "HID-compliant wireless radio controls": "10.0.22621.2506",
+  //   "Acer Airplane Mode Controller": "1.0.0.10",
+  //   "HID-compliant system controller": "10.0.22621.2506",
+  //   "HID-compliant consumer control device": "10.0.22621.1",
+  //   "HID Keyboard Device": "10.0.22621.1",
+  //   "Converted Portable Device Control device": "10.0.22621.1",
+  //   "Portable Device Control device": "10.0.22621.1",
+  //   "Intel(R) HID Event Filter": "2.2.1.384",
+  //   "ACPI Power Button": "10.0.22621.1",
+  //   "Intel(R) Power Engine Plug-in": "10.0.22621.2792",
+  //   "Microsoft Windows Management Interface for ACPI": "10.0.22621.1",
+  //   "Microsoft Windows Management Interface for ACPI": "10.0.22621.1",
+  //   "ACPI Processor Aggregator": "10.0.22621.1",
+  //   "Intel Processor": "10.0.22621.2506",
+  //   "Intel Processor": "10.0.22621.2506",
+  //   "Intel Processor": "10.0.22621.2506",
+  //   "Intel Processor": "10.0.22621.2506",
+  //   "ACPI Sleep Button": "10.0.22621.1",
+  //   "Motherboard resources": "10.0.22621.1",
+  //   "Intel(R) Serial IO GPIO Host Controller - INT34C5": "30.100.2031.2",
+  //   "Motherboard resources": "10.0.22621.1",
+  //   "Motherboard resources": "10.0.22621.1",
+  //   "Microsoft Windows Management Interface for ACPI": "10.0.22621.1",
+  //   "Motherboard resources": "10.0.22621.1",
+  //   "Intel(R) SPI (flash) Controller - A0A4": "10.1.24.5",
+  //   "Intel(R) SMBus - A0A3": "10.1.24.5",
+  //   "Audio Endpoint": "10.0.22621.1",
+  //   "Realtek Audio Effects Component": "13.247.1124.210",
+  //   "Intel® Smart Sound Technology for Digital Microphones": "10.29.0.9677",
+  //   "Intel® Smart Sound Technology for Bluetooth® Audio": "10.29.0.9677",
+  //   "Intel® Smart Sound Technology for USB Audio": "10.29.0.9677",
+  //   "Audio Endpoint": "10.0.22621.1",
+  //   "Realtek Audio Universal Service": "1.0.668.0",
+  //   "Realtek Hardware Support Application": "11.0.6000.313",
+  //   "Realtek Audio Effects Component": "13.0.6000.1097",
+  //   "Realtek Audio": "6.0.9601.1",
+  //   "Intel® Smart Sound Technology Detection Verification": "1.0.3045.0",
+  //   "Intel® Smart Sound Technology OED": "10.29.0.9677",
+  //   "Intel® Smart Sound Technology BUS": "10.29.0.9677",
+  //   "ACPI Lid": "10.0.22621.1",
+  //   "Microsoft AC Adapter": "10.0.22621.1",
+  //   "Microsoft ACPI-Compliant Control Method Battery": "1.0.0.6",
+  //   "Microsoft ACPI-Compliant Embedded Controller": "10.0.22621.1",
+  //   "Standard PS/2 Keyboard": "10.0.22621.1",
+  //   "Motherboard resources": "10.0.22621.1",
+  //   "System timer": "10.0.22621.1",
+  //   "System CMOS/real time clock": "10.0.22621.1",
+  //   "Motherboard resources": "10.0.22621.1",
+  //   "Programmable interrupt controller": "10.0.22621.1",
+  //   "High precision event timer": "10.0.22621.1",
+  //   "Intel(R) LPC Controller/eSPI Controller (U Premium...": "10.1.24.5",
+  //   "Realtek PCIe GbE Family Controller": "10.63.1014.2022",
+  //   "Intel(R) PCI Express Root Port #9 - A0B0": "10.1.24.5",
+  //   "Intel(R) Serial IO I2C Host Controller - A0C6": "30.100.2031.2",
+  //   "Intel(R) Serial IO I2C Host Controller - A0C5": "30.100.2031.2",
+  //   "Intel RST VMD Managed Controller 09AB": "18.6.1.1016",
+  //   "Intel(R) Management and Security Application Local...": "2130.1.16.1",
+  //   "Intel(R) iCLS Client": "1.63.1155.1",
+  //   "Intel(R) Dynamic Application Loader Host Interface": "1.41.2021.121",
+  //   "Intel(R) Management Engine Interface #1": "2040.100.0.1029",
+  //   "Microsoft Input Configuration Device": "10.0.22621.1",
+  //   "HID-compliant touch pad": "10.0.22621.2506",
+  //   "HID-compliant vendor-defined device": "10.0.22621.2506",
+  //   "HID-compliant mouse": "10.0.22621.1",
+  //   "I2C HID Device": "10.0.22621.2506",
+  //   "Intel(R) Serial IO I2C Host Controller - A0EB": "30.100.2031.2",
+  //   "Intel(R) Serial IO I2C Host Controller - A0E8": "30.100.2031.2",
+  //   "Microsoft Wi-Fi Direct Virtual Adapter": "10.0.22621.1",
+  //   "Microsoft Wi-Fi Direct Virtual Adapter": "10.0.22621.1",
+  //   "Intel(R) Wireless-AC 9560 160MHz": "22.10.0.7",
+  //   "PCI standard RAM Controller": "10.0.22621.1",
+  //   "Microsoft Bluetooth LE Enumerator": "10.0.22621.2506",
+  //   "Bluetooth Device (Personal Area Network)": "10.0.22621.2506",
+  //   "Bluetooth Device": "10.0.22621.3007",
+  //   "Bluetooth Device": "10.0.22621.3007",
+  //   "Microsoft Bluetooth Hands-Free Profile AudioGatewa...": "10.0.22621.1",
+  //   "Microsoft Bluetooth Hands-Free Profile AudioGatewa...": "10.0.22621.1",
+  //   "Microsoft Bluetooth Avrcp Transport Driver": "10.0.22621.2506",
+  //   "Microsoft Bluetooth Avrcp Transport Driver": "10.0.22621.2506",
+  //   "Microsoft Bluetooth A2dp Source": "10.0.22621.1",
+  //   "Microsoft Bluetooth A2dp Source": "10.0.22621.1",
+  //   "Microsoft Bluetooth Enumerator": "10.0.22621.3007",
+  //   "Bluetooth Device (RFCOMM Protocol TDI)": "10.0.22621.2506",
+  //   "Intel(R) Wireless Bluetooth(R)": "22.230.0.2",
+  //   "WinUsb Device": "10.0.22621.2506",
+  //   "USB Video Device": "10.0.22621.2506",
+  //   "USB Composite Device": "10.0.22621.2506",
+  //   "USB Root Hub (USB 3.0)": "10.0.22621.2861",
+  //   "USB xHCI Compliant Host Controller": "10.0.22621.2506",
+  //   "Intel(R) Optane(TM) Memory and Storage Management ...": "18.6.1.1016",
+  //   "Generic software component": "10.0.22621.1",
+  //   "Disk drive": "10.0.22621.2506",
+  //   "Intel RST VMD Controller 9A0B": "18.6.1.1016",
+  //   "Intel(R) GNA Scoring Accelerator module": "2.0.0.1097",
+  //   "Generic PnP Monitor": "10.0.22621.2506",
+  //   "Intel(R) Graphics Command Center": "30.0.101.1404",
+  //   "Intel(R) Graphics Control Panel": "30.0.101.1404",
+  //   "Intel(R) UHD Graphics": "30.0.101.1404",
+  //   "PCI standard host CPU bridge": "10.0.22621.1",
+  //   "PCI Express Root Complex": "10.0.22621.2861",
+  //   "Microsoft ACPI-Compliant System": "10.0.22621.2792",
+  //   "ACPI x64-based PC": "10.0.22621.1",
+  //   "Charge Arbitration Driver": "10.0.22621.1",
+  //   "UMBus Root Bus Enumerator": "10.0.22621.2506",
+  //   "Microsoft Storage Spaces Controller": "10.0.22621.2792",
+  //   "Microsoft Virtual Drive Enumerator": "10.0.22621.1",
+  //   "Composite Bus Enumerator": "10.0.22621.1",
+  //   "Microsoft Hyper-V Virtualization Infrastructure Dr...": "10.0.22621.2715",
+  //   "Microsoft Hypervisor Service": "10.0.22621.2506",
+  //   "Microsoft Basic Display Driver": "10.0.22621.1",
+  //   "Microsoft Hyper-V Virtual Machine Bus Provider": "10.0.22621.2506",
+  //   "Volume": "10.0.22621.1",
+  //   "Generic volume shadow copy": "10.0.22621.1",
+  //   "Volume Manager": "10.0.22621.2506",
+  // });
   const [comparisonResult, setComparisonResult] = useState([]);
 
   const [updateStatus, setUpdateStatus] = useState('');
@@ -186,6 +187,7 @@ const [isScanning, setIsScanning] = useState(false);
 const [percentage, setPercentage] = useState(0);
 const [updateCompleted, setUpdateCompleted] = useState(false);
 const [driversUpdated, setDriversUpdated] = useState(false);
+const [outdatedDriverCount, setOutdatedDriverCount] = useState(0);
 
 useEffect(() => {
   if (isScanning) {
@@ -224,104 +226,163 @@ const handleupdateofdriver =(e)=>{
    }
 }
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios("http://localhost:3000/getdrivers");
-  //       const driverinfo = await response.data;
-  //       setSystemInformation(driverinfo);
-  //       console.log(driverinfo);
-  //       const updatedComparisonResult = [];
-  //       console.log("Array updatedComparisonResult", updatedComparisonResult);
-  //       Object.keys(systemInformation).forEach((deviceName) => {
-  //         const backendDriverVersion = systemInformation[deviceName];
-  //         const frontendDriver = driverinfo.find(
-  //           (driver) => driver.DeviceName === deviceName
-  //         );
+// useEffect(() => {
+//   const fetchData = async () => {
+//       try {
+//           const response = await invoke('mine_driver');
+//           const driverinfo = JSON.parse(response);
+//           setSystemInformation(driverinfo);
 
-  //         if (frontendDriver) {
-  //           const isUpToDate =
-  //             frontendDriver.DriverVersion >= backendDriverVersion ;
+//           const updatedComparisonResult = [];
 
-  //           updatedComparisonResult.push({
-  //             deviceName,
-  //             DriverVersion: frontendDriver.DriverVersion,
-  //             DriverStatus: isUpToDate ? "Up to date" : "Outdated",
-  //             StatusColor: isUpToDate ? "#0C6B37" : "#EB9C35",
-  //             StatusIcon: isUpToDate ? <CheckIcon style={{fontSize: 'small',  color: '0C6B37'}} /> : <ErrorIcon style={{fontSize: 'small'}}  />,
-  //             StatusTextWeight: isUpToDate ? 'normal' : 'bolder',
-  //           });
-  //         }
-  //       });
-  //       setComparisonResult(updatedComparisonResult);
-  //     } catch (error) {
-  //       console.error("Error fetching driver information:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+//           const outdatedCount = Math.floor(Math.random() * (40 - 10 + 1)) + 10; // Generate a random count between 10 to 40 for outdated drivers
+//           let outdatedDriversSelected = 0;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-       const response = await invoke('mine_driver');
+//           driverinfo.forEach((driver) => {
+//               let driverStatus;
+//               let statusColor;
+//               let statusIcon;
+//               let statusTextWeight;
+
+//               if (!driversUpdated) {
+//                   // Check if the count of outdated drivers selected is less than the required count
+//                   if (outdatedDriversSelected < outdatedCount) {
+//                       // Select this driver as outdated
+//                       driverStatus = "Outdated";
+//                       statusColor = "#EB9C35";
+//                       statusIcon = <ErrorIcon style={{ fontSize: 'small' }} />;
+//                       statusTextWeight = 'bolder';
+
+//                       // Increment the count of outdated drivers selected
+//                       outdatedDriversSelected++;
+//                   } else {
+//                       // Mark the driver as up to date
+//                       driverStatus = "Up to date";
+//                       statusColor = "#0C6B37";
+//                       statusIcon = <CheckIcon style={{ fontSize: 'small', color: '0C6B37' }} />;
+//                       statusTextWeight = 'normal';
+//                   }
+//               } else {
+//                   driverStatus = driver.DriverStatus;
+//                   statusColor = driver.StatusColor;
+//                   statusIcon = driver.StatusIcon;
+//                   statusTextWeight = driver.StatusTextWeight;
+//               }
+
+//               updatedComparisonResult.push({
+//                   deviceName: driver.DeviceName,
+//                   DriverVersion: driver.DriverVersion,
+//                   DriverStatus: driverStatus,
+//                   StatusColor: statusColor,
+//                   StatusIcon: statusIcon,
+//                   StatusTextWeight: statusTextWeight,
+//               });
+//           });
+
+//           setComparisonResult(updatedComparisonResult);
+//       } catch (error) {
+//           console.error("Error fetching driver information:", error);
+//       }
+//   };
+
+//   fetchData();
+// }, [driversUpdated]);
+
+
+// useEffect(() => {
+//   const fetchData = async () => {
+//       try {
+//           const response = await invoke('mine_driver');
+//           const driverinfo = JSON.parse(response);
+
+//           const outdatedDriverNumbers = [20, 26, 32, 28, 37, 27, 40, 22, 18, 16, 24, 39, 13, 12, 38];
+
+//           let outdatedDrivers = [];
+//           let updatedDrivers = [];
+
+//           driverinfo.forEach((driver, index) => {
+//               if (outdatedDriverNumbers.includes(index + 1)) {
+//                   outdatedDrivers.push({
+//                       ...driver,
+//                       DriverStatus: "Outdated",
+//                       StatusColor: "#EB9C35",
+//                       StatusIcon: <ErrorIcon style={{ fontSize: 'small' }} />,
+//                       StatusTextWeight: 'bolder'
+//                   });
+//               } else {
+//                   updatedDrivers.push({
+//                       ...driver,
+//                       DriverStatus: "Up to date",
+//                       StatusColor: "#0C6B37",
+//                       StatusIcon: <CheckIcon style={{ fontSize: 'small', color: '0C6B37' }} />,
+//                       StatusTextWeight: 'normal'
+//                   });
+//               }
+//           });
+
+//           const updatedDriverInfo = [...outdatedDrivers, ...updatedDrivers];
+
+//           setSystemInformation(updatedDriverInfo);
+//           setOutdatedDriverCount(outdatedDrivers.length); 
+//       } catch (error) {
+//           console.error("Error fetching driver information:", error);
+//       }
+//   };
+
+//   fetchData();
+// }, [driversUpdated]);
+
+
+useEffect(() => {
+  const fetchDataAndStoreOutdatedDrivers = async () => {
+    try {
+      // Fetch driver information
+      const response = await invoke('mine_driver');
       const driverinfo = JSON.parse(response);
-        setSystemInformation(driverinfo);
 
-        const updatedComparisonResult = [];
+      const outdatedDriverNumbers = [20, 26, 32, 28, 37, 27, 40, 22, 18, 16, 24, 39, 13, 12, 38];
 
-        Object.keys(systemInformation).forEach((deviceName) => {
-          const backendDriverVersion = systemInformation[deviceName];
-          const frontendDriver = driverinfo.find(
-            (driver) => driver.DeviceName === deviceName
-          );
+      let outdatedDrivers = [];
+      let updatedDrivers = [];
 
-          if (frontendDriver) {
-            let driverStatus;
-            let statusColor;
-            let statusIcon;
-            let statusTextWeight;
+      driverinfo.forEach((driver, index) => {
+        if (outdatedDriverNumbers.includes(index + 1)) {
+          outdatedDrivers.push({
+            ...driver,
+            DriverStatus: "Outdated",
+            StatusColor: "#EB9C35",
+            StatusIcon: <ErrorIcon style={{ fontSize: "small" }} />,
+            StatusTextWeight: 'bolder'
+          });
+        } else {
+          updatedDrivers.push({
+            ...driver,
+            DriverStatus: "Up to date",
+            StatusColor: "#0C6B37",
+            StatusIcon: <CheckIcon style={{ fontSize: 'small' }} />,
+            StatusTextWeight: 'normal'
+          });
+        }
+      });
 
-            if (!driversUpdated) {
-              if (Math.random() < 0.3) {
-                driverStatus = "Outdated";
-                statusColor = "#EB9C35";
-                statusIcon = <ErrorIcon style={{ fontSize: 'small' }} />;
-                statusTextWeight = 'bolder';
-              } else {
-                driverStatus = "Up to date";
-                statusColor = "#0C6B37";
-                statusIcon = <CheckIcon style={{ fontSize: 'small', color: '0C6B37' }} />;
-                statusTextWeight = 'normal';
-              }
-            } else {
-              driverStatus = frontendDriver.DriverStatus;
-              statusColor = frontendDriver.StatusColor;
-              statusIcon = frontendDriver.StatusIcon;
-              statusTextWeight = frontendDriver.StatusTextWeight;
-            }
+      const updatedDriverInfo = [...outdatedDrivers, ...updatedDrivers];
 
-            updatedComparisonResult.push({
-              deviceName,
-              DriverVersion: frontendDriver.DriverVersion,
-              DriverStatus: driverStatus,
-              StatusColor: statusColor,
-              StatusIcon: statusIcon,
-              StatusTextWeight: statusTextWeight,
-            });
-          }
-        });
+      // Update state with driver information
+      setSystemInformation(updatedDriverInfo);
+      setOutdatedDriverCount(outdatedDrivers.length);
 
-        setComparisonResult(updatedComparisonResult);
-      } catch (error) {
-        console.error("Error fetching driver information:", error);
-      }
-    };
+      // Store outdated drivers in MongoDB
+      const res = await axios.post('http://localhost:3000/api/outdatedDrivers', { outdatedDrivers });
+      console.log("Outdated drivers stored in MongoDB:", res.data);
+    } catch (error) {
+      console.error("Error fetching and storing driver information:", error);
+    }
+  };
 
-    fetchData();
-  }, [driversUpdated]);
+  // Call the function only once on component mount
+  fetchDataAndStoreOutdatedDrivers();
 
-
+}, []); 
 
 
 
@@ -363,7 +424,7 @@ const handleupdateofdriver =(e)=>{
           <div className="col-12 col-lg-12 col-md-12 col-sm-12">
             <div className=" scantopoftable ">
               <div className="designspan font-black text-small">             
-              <WatchLaterIcon /> {comparisonResult.filter(driver => driver.DriverStatus === "Outdated").length} Out-Of-Date Drivers Found             
+              <WatchLaterIcon /> {outdatedDriverCount} Out-Of-Date Drivers Found             
               </div>
               <button
                 className="btn btn-light designbtn"
@@ -396,15 +457,17 @@ const handleupdateofdriver =(e)=>{
                         </label>
                       </div>
                     </th>
-                    <th scope="col" colspan="1" className="dobold">
+                    <th scope="col" colspan="1" className="dobold latestpadding">
                       Status
                     </th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {comparisonResult.length > 0 &&
-                    comparisonResult.map((driver, i) => {
+                  {
+                  // comparisonResult.length > 0 
+                  
+                  systemInformation && systemInformation.map((driver, i) => {
                       return (
                         <tr key={i}>
                           <th scope="row">
@@ -423,17 +486,17 @@ const handleupdateofdriver =(e)=>{
                                 class="form-check-label"
                                 for={`flexCheckDefault-${i}`}
                               >
-                                {driver.deviceName}
+                              g{driver.deviceName}
                               </label>
                             </div>
                           </th>
-                          <td colspan="2">
+                          <td colspan="2" style={{paddingLeft:"8rem"}}>
                             <br />
-                            <span className="text-xs font-extrabold  " style={{ color: driver.StatusColor ,fontWeight: driver.StatusTextWeight}}>
+                            <span className="text-xs font-black newoutdatedd " style={{ color: driver.StatusColor ,fontWeight: driver.StatusTextWeight}}>
                               {driver.DriverStatus} {driver.StatusIcon}
                             </span>
                             <br />
-                            <span className="text-xs">
+                            <span className="text-xs " >
                               {" "}
                               Version:{driver.DriverVersion}
                             </span>
@@ -441,7 +504,7 @@ const handleupdateofdriver =(e)=>{
                           <td>
                             {driver.DriverStatus === "Outdated" ? (
                               <span
-                                className="font-bold text-xs text-blue-500 underline setdriverinfor ml-20" 
+                                className="font-bold text-xs text-blue-500 underline setdriverinfor " 
                                 onClick={handleupdateofdriver}
                               >
                                 Update Driver

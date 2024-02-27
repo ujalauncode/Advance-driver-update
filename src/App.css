@@ -59,6 +59,13 @@ body {
   margin-top: 10px;
   
 }
+.latestpadding{
+  padding-left: 6rem !important;
+}
+.newoutdatedd{
+  font-weight: 900;
+  font-size: 13px;
+}
 .box-icon1 {
   height: 50px !important;
   width: 50px !important;
