@@ -63,34 +63,41 @@ function Dafrag({ currentDate, setCurrentDate }) {
     try {
       const response = await invoke('mine_driver');
       const newDriverData = JSON.parse(response);
-
+  
       setDriverData(newDriverData);
-      setDriversCount(newDriverData.length)
-      console.log(newDriverData)
+      setDriversCount(newDriverData.length);
+      console.log(newDriverData);
       setCurrentIndexs(0);
       console.log("get driver route");
-        const intervalId = setInterval(() => {
+      const intervalId = setInterval(() => {
         console.log("setInterval");
         if (isScanning) {
           setPercentage((prevPercentage) =>
             Math.min(prevPercentage + 100 / newDriverData.length, 100)
           );
           setCurrentIndexs((prevIndex) => prevIndex + 1);
-            if (currentIndexs >= newDriverData.length) {
+          if (currentIndexs >= newDriverData.length) {
             clearInterval(intervalId);
             setPercentage(100);
             handleRedirect("scan-registry", 3000);
           }
         }
-      },100);
-      // await axios.post('http://localhost:3000/backupall', {
-        
-      //         driversCount: newDriverData.driversCount,
-      //         driverData: newDriverData 
-      //       });
-
-      postBackupData(); 
-
+      }, 100);
+  
+      // Adding the backup date and formatting it
+      const currentDate = new Date();
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // January is 0!
+      const year = currentDate.getFullYear();
+      const formattedDate = `${day}/${month}/${year}`;
+      console.log("date is ==", formattedDate);
+  
+      await axios.post('http://localhost:3000/backupall', {
+        driversCount: newDriverData.driversCount,
+        driverData: newDriverData, // Assuming newDriverData contains the driver information
+        backupDate: formattedDate // Include backup date in the request
+      });
+  
       setScanInterval(intervalId);
       console.log("first interval id =", intervalId);
   
@@ -100,19 +107,11 @@ function Dafrag({ currentDate, setCurrentDate }) {
       console.error("Error:", error);
     }
   };
+  
+  
 
 
-    const postBackupData = async () => {
-      try {
-        await axios.post('http://localhost:3000/backupall', {
-          driversCount: totalCount, // Use the totalCount state directly
-        });
-        setTotalCount(driversCount)
-        console.log('Data posted successfully');
-      } catch (error) {
-        console.error("Error posting backup data:", error);
-      }
-    };
+ 
   
   
 

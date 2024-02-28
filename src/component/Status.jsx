@@ -29,7 +29,7 @@ function Status() {
   useEffect(() => {
     async function fetchBackupDates() {
       try {
-        const response = await axios.get("http://localhost:3000/backupdate");
+        const response = await axios.get("https://server-ign8.onrender.com/backupdate");
         setLatestBackupDates(response.data.sortedData);
       } catch (error) {
         setError("Error fetching backup dates: " + error.message);

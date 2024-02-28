@@ -17,7 +17,6 @@ export default function BackupRegistry() {
   const [deleteButtonStyle, setDeleteButtonStyle] = useState({
     display: "none",
   });
-
 const [mydriver,setmydriver]=useState([])
 
   const handleFocus = (event) => {
@@ -31,7 +30,7 @@ const [mydriver,setmydriver]=useState([])
   useEffect(() => {
     async function fetchBackupDates() {
       try {
-        const response = await axios.get('http://localhost:3000/backupdate');
+        const response = await axios.get('https://server-ign8.onrender.com/backupdate');
         setLatestBackupDates(response.data.sortedData);
       } catch (error) {
         setError('Error fetching backup dates: ' + error.message);
@@ -45,7 +44,7 @@ const [mydriver,setmydriver]=useState([])
   const handleDelete = async (id) => {
     console.log("handle delete func id =",id)
     try {
-      await axios.delete(`http://localhost:3000/backupdate/${id}`);
+      await axios.delete(`https://server-ign8.onrender.com/backupdate/${id}`);
 
       let filterArray = latestBackupDates.filter(date => date._id !== id)
       console.log(filterArray)
