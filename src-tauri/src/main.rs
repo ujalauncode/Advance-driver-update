@@ -49,9 +49,8 @@ struct SystemInfo {
     cpu_info: String,
     disk_info: String,
     video_controller_info: String,
-    product_id: String, // Include Product ID field
-    memory_info: String, // Include Memory field
-    // Add other fields as needed
+    product_id: String, 
+    memory_info: String,
 }
 
 #[tauri::command]
@@ -62,52 +61,61 @@ fn __cmd__testing() -> SystemInfo {
         .args(&["os", "get", "Caption"])
         .output()
         .expect("Failed to execute command");
-    let os_info_str = String::from_utf8_lossy(&os_info.stdout).trim().to_string();
+    let os_info_str = String::from_utf8_lossy(&os_info.stdout).lines().nth(1).unwrap_or("").trim().to_string();
 
     let cpu_info = Command::new("wmic")
         .args(&["cpu", "get", "name"])
         .output()
         .expect("Failed to execute command");
-    let cpu_info_str = String::from_utf8_lossy(&cpu_info.stdout).trim().to_string();
+    let cpu_info_str = String::from_utf8_lossy(&cpu_info.stdout).lines().nth(1).unwrap_or("").trim().to_string();
 
     let disk_info = Command::new("wmic")
         .args(&["diskdrive", "get", "size"])
         .output()
         .expect("Failed to execute command");
-    let disk_info_str = String::from_utf8_lossy(&disk_info.stdout).trim().to_string();
+    let disk_info_str = String::from_utf8_lossy(&disk_info.stdout).lines().nth(1).unwrap_or("").trim().to_string();
+    
+    // Convert disk info from bytes to gigabytes
+    let disk_info_gb = match disk_info_str.parse::<u64>() {
+        Ok(bytes) => bytes / (1024 * 1024 * 1024), // Convert bytes to gigabytes
+        Err(_) => 0, // Handle parse errors gracefully
+    };
+    let disk_info_gb_str = format!("{}", disk_info_gb);
 
     let video_controller_info = Command::new("wmic")
         .args(&["path", "Win32_VideoController", "get", "name"])
         .output()
         .expect("Failed to execute command");
-    let video_controller_info_str = String::from_utf8_lossy(&video_controller_info.stdout).trim().to_string();
+    let video_controller_info_str = String::from_utf8_lossy(&video_controller_info.stdout).lines().nth(1).unwrap_or("").trim().to_string();
 
     let product_id = Command::new("wmic")
         .args(&["bios", "get", "serialnumber"])
         .output()
         .expect("Failed to execute command");
-    let product_id_str = String::from_utf8_lossy(&product_id.stdout).trim().to_string();
+    let product_id_str = String::from_utf8_lossy(&product_id.stdout).lines().nth(1).unwrap_or("").trim().to_string();
 
     let memory_info = Command::new("wmic")
         .args(&["memorychip", "get", "Capacity"])
         .output()
         .expect("Failed to execute command");
-    let memory_info_str = String::from_utf8_lossy(&memory_info.stdout).trim().to_string();
+    let memory_info_str = String::from_utf8_lossy(&memory_info.stdout).lines().nth(1).unwrap_or("").trim().to_string();
+
+    // Convert memory info from bytes to gigabytes
+    let memory_info_gb = match memory_info_str.parse::<u64>() {
+        Ok(bytes) => bytes / (1024 * 1024 * 1024), // Convert bytes to gigabytes
+        Err(_) => 0, // Handle parse errors gracefully
+    };
+    let memory_info_gb_str = format!("{}", memory_info_gb);
 
     SystemInfo {
         os_info: os_info_str,
         cpu_info: cpu_info_str,
-        disk_info: disk_info_str,
+        disk_info: disk_info_gb_str,
         video_controller_info: video_controller_info_str,
         product_id: product_id_str,
-        memory_info: memory_info_str,
+        memory_info: memory_info_gb_str,
     }
 }
-
-
-
-
-
 
 
 

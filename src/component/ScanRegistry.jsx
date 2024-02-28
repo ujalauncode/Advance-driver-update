@@ -188,7 +188,7 @@ const [percentage, setPercentage] = useState(0);
 const [updateCompleted, setUpdateCompleted] = useState(false);
 const [driversUpdated, setDriversUpdated] = useState(false);
 const [outdatedDriverCount, setOutdatedDriverCount] = useState(0);
-
+const [systemInfo,setSystemInfo]=useState()
 
 useEffect(() => {
   if (isScanning) {
@@ -332,7 +332,25 @@ const handleupdateofdriver =(e)=>{
 
 //   fetchData();
 // }, [driversUpdated]);
-
+useEffect(() => {
+  const fetchSystemInfo = async () => {
+    try {
+      const response = await invoke("__cmd__testing");
+      const a = {
+        cpu_info: response.cpu_info,
+        os_info: response.os_info,
+        disk_info: response.disk_info,
+        memory_info: response.memory_info,
+        video_controller_info: response.video_controller_info,
+        product_id:response.product_id
+      };
+      setSystemInfo(a);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  fetchSystemInfo();
+}, []);
 
 useEffect(() => {
   const fetchDataAndStoreOutdatedDrivers = async () => {
@@ -373,7 +391,7 @@ useEffect(() => {
       setOutdatedDriverCount(outdatedDrivers.length);
 
       // Store outdated drivers in MongoDB
-      const res = await axios.post('http://localhost:3000/api/outdatedDrivers', { outdatedDrivers });
+      const res = await axios.post('http://localhost:3000/api/outdatedDrivers', { outdatedDrivers});
       console.log("Outdated drivers stored in MongoDB:", res.data);
     } catch (error) {
       console.error("Error fetching and storing driver information:", error);
@@ -489,7 +507,7 @@ const handleSelect = (e) => {
                                 class="form-check-label"
                                 for={`flexCheckDefault-${i}`}
                               >
-                              g{driver.deviceName}
+                              {driver.DeviceName}
                               </label>
                             </div>
                           </th>
@@ -764,11 +782,6 @@ const handleSelect = (e) => {
               <span>{percentage.toFixed()}%</span> 
             </div>
           </div>
-          {percentage === 100 && (
-        <div className="update-completed-message text-black mssg">
-          Status: Up to date
-        </div>
-      )}
         </div>
       </div>
      </div>
