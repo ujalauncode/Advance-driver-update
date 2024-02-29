@@ -9,96 +9,119 @@ fn greet(name: &str) -> String {
 }
 
 
-use std::process::Command;
-use serde_json::Value;
+use std::process::{Command, Stdio};
+use std::os::windows::process::CommandExt; // Add this line
 
 #[tauri::command]
 fn mine_driver() -> Result<String, String> {
     let output = Command::new("powershell")
-        .arg("-Command")
-        .arg("$driverInfo = Get-WmiObject Win32_PnPSignedDriver | Select-Object DeviceName, DriverVersion, DriverStatus; ConvertTo-Json $driverInfo")
+        .args(&["-Command", "$driverInfo = Get-WmiObject Win32_PnPSignedDriver | Select-Object DeviceName, DriverVersion, DriverStatus; ConvertTo-Json $driverInfo"])
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .creation_flags(0x08000000) // CREATE_NO_WINDOW flag
         .output()
         .map_err(|e| format!("Failed to execute command: {}", e))?;
 
-    let stdout = String::from_utf8_lossy(&output.stdout);
-    let parsed_json: Value = serde_json::from_str(&stdout)
-        .map_err(|e| format!("Failed to parse JSON: {}", e))?;
-
-    Ok(stdout.to_string())
+    if output.status.success() {
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        Ok(stdout.to_string())
+    } else {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        Err(format!("Command failed with error: {}", stderr))
+    }
 }
 
-// #[tauri::command]
-// fn __cmd__testing() -> String {
-//     let output = Command::new("SystemInfo")
-//         .output()
-//         .expect("Failed to execute command");
-//     let output_str = String::from_utf8_lossy(&output.stdout);
+use tokio;
 
-//     output_str.to_string()
-// }
-
-
-// this is for system info
-
-
+use mongodb::{Client, Collection};
 use serde::Serialize;
-
+use std::error::Error;
 #[derive(Serialize)]
 struct SystemInfo {
     os_info: String,
     cpu_info: String,
     disk_info: String,
     video_controller_info: String,
-    product_id: String, 
+    product_id: String,
     memory_info: String,
+}
+
+async fn insert_system_info(system_info: SystemInfo) -> Result<(), Box<dyn Error>> {
+    // Connect to MongoDB
+    let client = Client::with_uri_str("mongodb+srv://user1:user123@cluster0.g1p3xeq.mongodb.net/driversdbs").await?;
+    let db = client.database("systeminfo");
+    let collection: Collection<SystemInfo> = db.collection("system_info");
+
+    // Insert system info into the collection
+    collection.insert_one(system_info, None).await?;
+
+    Ok(())
 }
 
 #[tauri::command]
 fn __cmd__testing() -> SystemInfo {
-    use std::process::Command;
+    use std::process::{Command, Stdio};
 
     let os_info = Command::new("wmic")
         .args(&["os", "get", "Caption"])
+        .stdout(Stdio::piped())
         .output()
-        .expect("Failed to execute command");
-    let os_info_str = String::from_utf8_lossy(&os_info.stdout).lines().nth(1).unwrap_or("").trim().to_string();
+        .expect("Failed to execute command")
+        .stdout;
+
+    let os_info_str = String::from_utf8_lossy(&os_info).lines().nth(1).unwrap_or("").trim().to_string();
 
     let cpu_info = Command::new("wmic")
         .args(&["cpu", "get", "name"])
+        .stdout(Stdio::piped())
         .output()
-        .expect("Failed to execute command");
-    let cpu_info_str = String::from_utf8_lossy(&cpu_info.stdout).lines().nth(1).unwrap_or("").trim().to_string();
+        .expect("Failed to execute command")
+        .stdout;
+
+    let cpu_info_str = String::from_utf8_lossy(&cpu_info).lines().nth(1).unwrap_or("").trim().to_string();
 
     let disk_info = Command::new("wmic")
         .args(&["diskdrive", "get", "size"])
+        .stdout(Stdio::piped())
         .output()
-        .expect("Failed to execute command");
-    let disk_info_str = String::from_utf8_lossy(&disk_info.stdout).lines().nth(1).unwrap_or("").trim().to_string();
-    
-    // Convert disk info from bytes to gigabytes
+        .expect("Failed to execute command")
+        .stdout;
+
+    let disk_info_str = String::from_utf8_lossy(&disk_info).lines().nth(1).unwrap_or("").trim().to_string();
+
     let disk_info_gb = match disk_info_str.parse::<u64>() {
         Ok(bytes) => bytes / (1024 * 1024 * 1024), // Convert bytes to gigabytes
         Err(_) => 0, // Handle parse errors gracefully
     };
+
     let disk_info_gb_str = format!("{}", disk_info_gb);
 
     let video_controller_info = Command::new("wmic")
         .args(&["path", "Win32_VideoController", "get", "name"])
+        .stdout(Stdio::piped())
         .output()
-        .expect("Failed to execute command");
-    let video_controller_info_str = String::from_utf8_lossy(&video_controller_info.stdout).lines().nth(1).unwrap_or("").trim().to_string();
+        .expect("Failed to execute command")
+        .stdout;
+
+    let video_controller_info_str = String::from_utf8_lossy(&video_controller_info).lines().nth(1).unwrap_or("").trim().to_string();
 
     let product_id = Command::new("wmic")
         .args(&["bios", "get", "serialnumber"])
+        .stdout(Stdio::piped())
         .output()
-        .expect("Failed to execute command");
-    let product_id_str = String::from_utf8_lossy(&product_id.stdout).lines().nth(1).unwrap_or("").trim().to_string();
+        .expect("Failed to execute command")
+        .stdout;
+
+    let product_id_str = String::from_utf8_lossy(&product_id).lines().nth(1).unwrap_or("").trim().to_string();
 
     let memory_info = Command::new("wmic")
         .args(&["memorychip", "get", "Capacity"])
+        .stdout(Stdio::piped())
         .output()
-        .expect("Failed to execute command");
-    let memory_info_str = String::from_utf8_lossy(&memory_info.stdout).lines().nth(1).unwrap_or("").trim().to_string();
+        .expect("Failed to execute command")
+        .stdout;
+
+    let memory_info_str = String::from_utf8_lossy(&memory_info).lines().nth(1).unwrap_or("").trim().to_string();
 
     // Convert memory info from bytes to gigabytes
     let memory_info_gb = match memory_info_str.parse::<u64>() {
@@ -106,7 +129,7 @@ fn __cmd__testing() -> SystemInfo {
         Err(_) => 0, // Handle parse errors gracefully
     };
     let memory_info_gb_str = format!("{}", memory_info_gb);
-
+  
     SystemInfo {
         os_info: os_info_str,
         cpu_info: cpu_info_str,
@@ -115,78 +138,9 @@ fn __cmd__testing() -> SystemInfo {
         product_id: product_id_str,
         memory_info: memory_info_gb_str,
     }
+
+   
 }
-
-
-
-// #[tauri::command]
-// fn __cmd__testing() -> String {
-//     use std::process::Command;
-
-//     let output_system_info = Command::new("SystemInfo")
-//         .output()
-//         .expect("Failed to execute command");
-
-//     let output_str_system_info = String::from_utf8_lossy(&output_system_info.stdout);
-
-//     let output_os_info = Command::new("wmic")
-//         .args(&["os", "get", "Caption"])
-//         .output()
-//         .expect("Failed to execute command");
-
-//     let output_str_os_info = String::from_utf8_lossy(&output_os_info.stdout);
-
-//     let output_cpu_info = Command::new("wmic")
-//         .args(&["cpu", "get", "name"])
-//         .output()
-//         .expect("Failed to execute command");
-
-//     let output_str_cpu_info = String::from_utf8_lossy(&output_cpu_info.stdout);
-
-//     let output_disk_info = Command::new("wmic")
-//         .args(&["diskdrive", "get", "size"])
-//         .output()
-//         .expect("Failed to execute command");
-
-//     let output_str_disk_info = String::from_utf8_lossy(&output_disk_info.stdout);
-
-//     let output_video_controller_info = Command::new("wmic")
-//         .args(&["path", "Win32_VideoController", "get", "name"])
-//         .output()
-//         .expect("Failed to execute command");
-
-//     let output_str_video_controller_info = String::from_utf8_lossy(&output_video_controller_info.stdout);
-
-//     let mut extracted_info = String::new();
-
-//     for line in output_str_system_info.lines() {
-//         if line.starts_with("OS Name:")
-//             || line.starts_with("Processor(s):")
-//             || line.starts_with("Total Physical Memory:")
-//             || line.starts_with("Product ID:")
-//         {
-//             extracted_info.push_str(line);
-//             extracted_info.push('\n');
-//         }
-//     }
-
-//     extracted_info.push_str("OS Info:\n");
-//     extracted_info.push_str(&output_str_os_info);
-
-//     extracted_info.push_str("CPU Info:\n");
-//     extracted_info.push_str(&output_str_cpu_info);
-
-//     extracted_info.push_str("Disk Info:\n");
-//     extracted_info.push_str(&output_str_disk_info);
-
-//     extracted_info.push_str("Video Controller Info:\n");
-//     extracted_info.push_str(&output_str_video_controller_info);
-
-//     extracted_info
-// }
-
-
-// this is to check updates
 
 #[tauri::command]
 fn __cmd__checkagain() -> String {

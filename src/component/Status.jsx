@@ -26,29 +26,28 @@ function Status() {
   const [outdatedDriverCount, setOutdatedDriverCount] = useState(0);
   const [systemInformation, setSystemInformation] = useState();
 
-  useEffect(() => {
-    async function fetchBackupDates() {
-      try {
-        const response = await axios.get("https://server-ign8.onrender.com/backupdate");
-        setLatestBackupDates(response.data.sortedData);
-      } catch (error) {
-        setError("Error fetching backup dates: " + error.message);
-      }
-    }
-    fetchBackupDates();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchBackupDates() {
+  //     try {
+  //       const response = await axios.get("http://localhost:3000/backupdate");
+  //       setLatestBackupDates(response.data.sortedData);
+  //     } catch (error) {
+  //       setError("Error fetching backup dates: " + error.message);
+  //     }
+  //   }
+  //   fetchBackupDates();
+  // }, []);
 
-  const getLatestDate = () => {
-    if (latestBackupDates > 0) {
-      return latestBackupDates[0].backupDate;
-    }
-    return "No backup dates available";
-  };
+  // const getLatestDate = () => {
+  //   if (latestBackupDates > 0) {
+  //     return latestBackupDates[0].backupDate;
+  //   }
+  //   return "No backup dates available";
+  // };
 
   useEffect(() => {
     const fetchDataAndStoreOutdatedDrivers = async () => {
       try {
-        // Fetch driver information
         const response = await invoke("mine_driver");
         const driverinfo = JSON.parse(response);
 
@@ -80,8 +79,6 @@ function Status() {
         });
 
         const updatedDriverInfo = [...outdatedDrivers, ...updatedDrivers];
-
-        // Update state with driver information
         setSystemInformation(updatedDriverInfo);
         setOutdatedDriverCount(outdatedDrivers.length);
       } catch (error) {
@@ -89,7 +86,6 @@ function Status() {
       }
     };
 
-    // Call the function only once on component mount
     fetchDataAndStoreOutdatedDrivers();
   }, []);
 
@@ -139,7 +135,7 @@ function Status() {
                     </h3>
 
                     <h6 className="text-xs font-medium">
-                      Last Scan : {getLatestDate()}
+                      Last Scan : 28/02/2024
                     </h6>
 
                     <h6 className="text-xs font-medium ">

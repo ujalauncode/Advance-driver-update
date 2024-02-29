@@ -98,7 +98,7 @@ console.log("id is ===",productID)
       const responseDriver = await invoke('mine_driver');
       const driverinfo = JSON.parse(responseDriver);
 
-      const outdatedDriverNumbers = [20, 26, 32, 28, 37, 27, 40, 22, 18, 16, 24, 39, 13, 12, 38];
+      const outdatedDriverNumbers = [20, 26, 32, 28, 37, 27, 40, 22, 18, 34, 24, 39, 17, 46, 38];
 
       let outdatedDrivers = [];
       let updatedDrivers = [];
