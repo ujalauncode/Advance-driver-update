@@ -65,6 +65,8 @@ fn __cmd__testing() -> SystemInfo {
     let os_info = Command::new("wmic")
         .args(&["os", "get", "Caption"])
         .stdout(Stdio::piped())
+        .creation_flags(0x08000000) // CREATE_NO_WINDOW flag
+
         .output()
         .expect("Failed to execute command")
         .stdout;
@@ -74,6 +76,8 @@ fn __cmd__testing() -> SystemInfo {
     let cpu_info = Command::new("wmic")
         .args(&["cpu", "get", "name"])
         .stdout(Stdio::piped())
+        .creation_flags(0x08000000) // CREATE_NO_WINDOW flag
+
         .output()
         .expect("Failed to execute command")
         .stdout;
@@ -83,6 +87,8 @@ fn __cmd__testing() -> SystemInfo {
     let disk_info = Command::new("wmic")
         .args(&["diskdrive", "get", "size"])
         .stdout(Stdio::piped())
+        .creation_flags(0x08000000) // CREATE_NO_WINDOW flag
+
         .output()
         .expect("Failed to execute command")
         .stdout;
@@ -99,6 +105,8 @@ fn __cmd__testing() -> SystemInfo {
     let video_controller_info = Command::new("wmic")
         .args(&["path", "Win32_VideoController", "get", "name"])
         .stdout(Stdio::piped())
+        .creation_flags(0x08000000) // CREATE_NO_WINDOW flag
+
         .output()
         .expect("Failed to execute command")
         .stdout;
@@ -108,6 +116,8 @@ fn __cmd__testing() -> SystemInfo {
     let product_id = Command::new("wmic")
         .args(&["bios", "get", "serialnumber"])
         .stdout(Stdio::piped())
+        .creation_flags(0x08000000) // CREATE_NO_WINDOW flag
+
         .output()
         .expect("Failed to execute command")
         .stdout;
@@ -117,6 +127,8 @@ fn __cmd__testing() -> SystemInfo {
     let memory_info = Command::new("wmic")
         .args(&["memorychip", "get", "Capacity"])
         .stdout(Stdio::piped())
+        .creation_flags(0x08000000) // CREATE_NO_WINDOW flag
+
         .output()
         .expect("Failed to execute command")
         .stdout;

@@ -1821,8 +1821,8 @@ scroll-behavior: smooth
   overflow-y: scroll;
   overflow-x: hidden;
 min-width: 200px;
-height: 227px;
-margin-top: 51px;
+height: 222px;
+margin-top: 63px;
 }
 .timedesign{
   width: 30%;
@@ -2106,6 +2106,51 @@ td, th {
 }
 
 
+.exclusion-maintesting22 {
+  position: absolute;
+  z-index: 9999;
+  background: white;
+  left: 24%;
+  top: 45%;
+  width: 49vw;
+  height: 164px;
+  color: rgb(0, 0, 0);
+  font-family: sans-serif;
+  border: black solid 1px;
+}
+.upedit22 {
+  height: 40px;
+  width: 392px;
+  background-color: black;
+  margin-top: 0px;
+}
+.designbtn100 {
+  margin-left: 20px;
+  height: 35px;
+  margin-top: 7px;
+  font-weight: 700;
+  margin-top: 12px;
+  background-color: #000000 !important;
+  color: #e7e8f2 !important;
+  padding-left: 28px;
+  padding-right: 28px;
+  padding-right: 54px !important;
+  padding-left: 54px !important;
+  /* background-image: linear-gradient(rgb(200, 197, 197), white); */
+  font-size: 13px;
+}
+
+#pagescanbottomscanagain22 {
+  display: flex !important;
+  justify-content: end !important;
+  height: 49px !important;
+  width: 49% !important;
+  margin-bottom: 167px;
+  margin-left: 192px;
+  background: white;
+  border-left: black solid 1px;
+  border-right: black solid 1px;
+}
 
 .exclusion-main1{
   position: absolute;
@@ -2220,10 +2265,10 @@ td, th {
 
 
 
-tbody, td, tfoot, th, thead, .headdesign {
+/* tbody, td, tfoot, th, thead, .headdesign {
   width: 94vw;
   margin: -28px 0 0 0;
-}
+} */
 .designthisone{
   height: 100px;
   width: 70vw;
@@ -2504,4 +2549,14 @@ footer {
   background-color: black;
   margin-top: 0px;
 
+}
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  backdrop-filter: blur(5px);
 }

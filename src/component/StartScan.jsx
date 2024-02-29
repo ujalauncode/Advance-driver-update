@@ -3,7 +3,7 @@ import axios from "axios";
 import giphy from "../Image/giphy.gif";
 import ScanRegistry from "./ScanRegistry";
 import { invoke } from '@tauri-apps/api/tauri';
-
+import "../component/StartScan.css"
 
 export default function StartScan({ value = 0 }) {
   const [driverData, setDriverData] = useState([]);
@@ -80,9 +80,6 @@ export default function StartScan({ value = 0 }) {
     }
   };
 
- 
-
-
   const scrollToFileEnd = () => {
     const fileList = fileListRef.current;
     if (fileList) {
@@ -92,18 +89,6 @@ export default function StartScan({ value = 0 }) {
   const handleScanToggle = () => {
     setIsScanning((prevIsScanning) => !prevIsScanning);
   };
-
-  //     console.log("hello from frontend");
-    // const a =await invoke('__cmd__testing')
-    // console.log("this is system info-----",  a)
-    // const b = await invoke('get_windows_update')
-    // console.log("window update ----", b)
-// const d=await invoke('__cmd__checkupdate')
-// console.log("updating drivers",d)
-    // const c=await invoke('__cmd__checkagain')
-
-
-
 
 
   return cleanerStatus === "status" ? (
@@ -164,7 +149,7 @@ export default function StartScan({ value = 0 }) {
           {isScanning ? "Stop Scan" : "Start Scan"}
         </button>
       </div>
-      {handleRedirect("scan-registry", 13000)}
+      {handleRedirect("scan-registry", 15000)}
     </>
   ) : (
     <ScanRegistry />

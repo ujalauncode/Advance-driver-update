@@ -36,6 +36,10 @@ const [updateCompleted, setUpdateCompleted] = useState(false);
 const [driversUpdated, setDriversUpdated] = useState(false);
 const [outdatedDriverCount, setOutdatedDriverCount] = useState(0);
 const [systemInfo,setSystemInfo]=useState()
+const [updatesuccessful,setupdatesuccessful]=useState()
+const [drivers, setDrivers] = useState([]);
+
+
 
 useEffect(() => {
   if (isScanning) {
@@ -57,11 +61,11 @@ useEffect(() => {
 
 
 
-const handleupdateofdriver =(id)=>{
+const handleupdateofdriver =(driverId)=>{
   if(!hide){
     setHide(true)
     setDriversUpdated(true);
-    updateDriverStatus(id);
+    handleUpdateDriverStatus(driverId);
 
    }
 }
@@ -86,25 +90,32 @@ useEffect(() => {
   fetchSystemInfo();
 }, []);
 
+const outdatedDriverNumbers = [20, 26, 32, 28, 37, 27, 40, 22, 18, 34, 24, 39, 17, 46, 38, 42, 33, 23, 21, 26];
 
+const getRandomNumber = () => {
+  const randomIndex = Math.floor(Math.random() * outdatedDriverNumbers.length);
+  return outdatedDriverNumbers[randomIndex];
+};
+
+const [selectedNumber, setSelectedNumber] = useState(() => {
+  const storedNumber = localStorage.getItem('selectedNumber');
+  return storedNumber ? parseInt(storedNumber, 10) : getRandomNumber();
+});
 useEffect(() => {
   const fetchDataAndStoreOutdatedDrivers = async () => {
     try {
-      // Fetch product ID
       const responseProductID = await invoke("__cmd__testing");
-      const productID = responseProductID.product_id;
-console.log("id is ===",productID)
-      // Fetch driver information
+            const productID = responseProductID.product_id;
+      console.log("id is ===",productID)
+      
       const responseDriver = await invoke('mine_driver');
       const driverinfo = JSON.parse(responseDriver);
-
-      const outdatedDriverNumbers = [20, 26, 32, 28, 37, 27, 40, 22, 18, 34, 24, 39, 17, 46, 38];
 
       let outdatedDrivers = [];
       let updatedDrivers = [];
 
       driverinfo.forEach((driver, index) => {
-        if (outdatedDriverNumbers.includes(index + 1)) {
+        if (index + 1 <= selectedNumber) { // Check against selectedNumber
           outdatedDrivers.push({
             ...driver,
             DriverStatus: "Outdated",
@@ -124,12 +135,8 @@ console.log("id is ===",productID)
       });
 
       const updatedDriverInfo = [...outdatedDrivers, ...updatedDrivers];
-
-      // Update state with driver information
       setSystemInformation(updatedDriverInfo);
       setOutdatedDriverCount(outdatedDrivers.length);
-
-      // Store outdated drivers along with product ID in MongoDB
       const res = await axios.post('http://localhost:3000/api/outdatedDrivers', { outdatedDrivers, productID });
       console.log("Outdated drivers stored in MongoDB:", res.data);
     } catch (error) {
@@ -137,10 +144,72 @@ console.log("id is ===",productID)
     }
   };
 
-  // Call the function only once on component mount
   fetchDataAndStoreOutdatedDrivers();
 
-}, []);
+}, [selectedNumber]); 
+
+useEffect(() => {
+  localStorage.setItem('selectedNumber', selectedNumber);
+}, [selectedNumber]);
+
+
+// useEffect(() => {
+//   const fetchDataAndStoreOutdatedDrivers = async () => {
+//     try {
+//       const responseProductID = await invoke("__cmd__testing");
+//       const productID = responseProductID.product_id;
+// console.log("id is ===",productID)
+//       // Fetch driver information
+      
+//       const randomIndex = Math.floor(Math.random() * outdatedDriverNumbers.length);
+//       const selectedNumber = outdatedDriverNumbers[randomIndex];
+
+//       const responseDriver = await invoke('mine_driver');
+//       const driverinfo = JSON.parse(responseDriver);
+
+//       // const outdatedDriverNumbers = [20, 26, 32, 28, 37, 27, 40, 22, 18, 34, 24, 39, 17, 46, 38,42,33,23,21,26];
+
+//       let outdatedDrivers = [];
+//       let updatedDrivers = [];
+
+//       driverinfo.forEach((driver, index) => {
+//         if (index + 1 <= selectedNumber) { // Check against selectedNumber
+//           outdatedDrivers.push({
+//             ...driver,
+//             DriverStatus: "Outdated",
+//             StatusColor: "#EB9C35",
+//             StatusIcon: <ErrorIcon style={{ fontSize: "small" }} />,
+//             StatusTextWeight: 'bolder'
+//           });
+//         }  else {
+//           updatedDrivers.push({
+//             ...driver,
+//             DriverStatus: "Up to date",
+//             StatusColor: "#0C6B37",
+//             StatusIcon: <CheckIcon style={{ fontSize: 'small' }} />,
+//             StatusTextWeight: 'normal'
+//           });
+//         }
+//       });
+
+//       const updatedDriverInfo = [...outdatedDrivers, ...updatedDrivers];
+
+//       // Update state with driver information
+//       setSystemInformation(updatedDriverInfo);
+//       setOutdatedDriverCount(outdatedDrivers.length);
+
+//       // Store outdated drivers along with product ID in MongoDB
+//       const res = await axios.post('http://localhost:3000/api/outdatedDrivers', { outdatedDrivers, productID });
+//       console.log("Outdated drivers stored in MongoDB:", res.data);
+//     } catch (error) {
+//       console.error("Error fetching and storing driver information:", error);
+//     }
+//   };
+
+//   // Call the function only once on component mount
+//   fetchDataAndStoreOutdatedDrivers();
+
+// }, []);
 
 
 const updateDriverStatus = async (id) => {
@@ -185,16 +254,47 @@ const handleSelect = (e) => {
   setSelectedCount(selectedOutdatedCount);
 };
 
+
+
   const updatedrive = () => {
     if (!showdriver) {
-      setShowdriver(true);
-      setIsScanning(true);
-      setTimeout(()=>{
-        // updateDriverStatus(driver._id);     
-       },10000)
-      setHide(false);
+        setShowdriver(true);
+        setIsScanning(true);
+        setTimeout(() => {
+            setShowdriver(false);
+            setTimeout(() => {
+                setupdatesuccessful(true);
+            }, 100); 
+        }, 10000); 
+        setHide(false);
     }
-  };
+};
+
+
+
+const handleUpdateDriverStatus = async (driverId) => {
+  try {
+    const updatedDrivers = drivers.map(driver => {
+      if (driver._id === driverId) {
+        return {
+          ...driver,
+          DriverStatus: "Up to date",
+          StatusColor: "#0C6B37",
+          StatusIcon: <CheckIcon style={{ fontSize: 'small' }} />,
+          StatusTextWeight: 'normal'
+        };
+      }
+      return driver;
+    });
+    setDrivers(updatedDrivers);
+    
+    const response = await axios.put(`http://localhost:3000/api/outdatedDrivers/${driverId}`, {});
+    console.log("Driver status updated successfully:", response.data);
+    
+  } catch (error) {
+    console.error("Error updating driver status:", error);
+  }
+};
 
   return cleanerStart === "status" ? (
     <>
@@ -513,10 +613,9 @@ const handleSelect = (e) => {
           </div>
         </div>
       )}
-
 {/* for update popup  */}
-      {showdriver && (
-        <div className="exclusion-maintesting">
+{showdriver && (
+        <div id="" className="exclusion-maintesting">
           <div className="upedit">
                <h1 style={{ marginLeft: "10px" }} className="font-extrabold pt-2">
                  <b className="text-white">Update all your drivers in minutes</b>
@@ -543,10 +642,32 @@ const handleSelect = (e) => {
       </div>
      </div>
      <div id="pagescanbottomscanagain" className="fixed-bottom   flex justify-content-end bg-gray-100">
-     <a className="btn btn-light designbtn10 mr-2 border-black bg-green-700 text-white px-3" href="" onClick={(e) => setShowdriver(false)}>Ok </a>
+     <a className="btn btn-light designbtn10 mr-2 border-black bg-green-700 text-white px-3" href="" onClick={(e)=>setShowdriver(false)}>Ok </a>
      </div>
      </div>
-      )}
+ )}
+{updatesuccessful && (
+   <div className="exclusion-maintesting22">
+   <div className="upedit22">
+        <h1 style={{ marginLeft: "10px" }} className="font-extrabold pt-2">
+          <b className="text-white">Update drivers has been updated</b>
+         </h1>
+         
+   </div>             
+<div className="minenewpop ml-8 mt-4">
+<div className=" place-content-evenly mt-2 text-xs pt-2">
+<h1 className="font-bold text-black text-xs">SUCCESSFULL!!!</h1><br/>
+<span className=" text-black text-xs"> 
+You are now getting maximum benifit from the device
+</span>      
+</div>
+
+</div>
+<div id="pagescanbottomscanagain22" className="fixed-bottom   flex justify-content-end bg-gray-100">
+<a className="btn btn-light designbtn100 mr-2 border-black bg-green-700 text-white px-3" href="" onClick={(e) => setupdatesuccessful(false)}>Ok </a>
+</div>
+</div>
+)}
     </>
   ) : (
     <Setting value="Scan" />

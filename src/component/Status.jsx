@@ -25,6 +25,8 @@ function Status() {
   const [latestBackupDates, setLatestBackupDates] = useState([]);
   const [outdatedDriverCount, setOutdatedDriverCount] = useState(0);
   const [systemInformation, setSystemInformation] = useState();
+  const [count, setCount] = useState(null);
+  const [latestBackupDate, setLatestBackupDate] = useState('');
 
   // useEffect(() => {
   //   async function fetchBackupDates() {
@@ -118,6 +120,45 @@ function Status() {
     fetchSystemInfo();
   }, []);
 
+  useEffect(() => {
+    axios.get('http://localhost:3000/api/outdatedDrivers/count')
+      .then(response => {
+        setCount(response.data.count);
+      })
+      .catch(error => {
+        setError('Error fetching outdated drivers count');
+        console.error('Error fetching outdated drivers count:', error);
+      });
+  }, []); 
+
+
+  useEffect(() => {
+    async function fetchLatestBackupDate() {
+      try {
+        const response = await axios.get('http://localhost:3000/backupdate');
+        const data = response.data;
+
+        if (data.sortedData && data.sortedData.length > 0) {
+          const latestDate = data.sortedData[0].backupDate;
+          setLatestBackupDate(latestDate);
+        } else {
+          setError('No backup dates found in the database');
+        }
+      } catch (error) {
+        setError('Error fetching latest backup date');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchLatestBackupDate();
+  }, []);
+
+
+
+
+
+
   return cleanerStart === "status" ? (
     <>
       <div className="container-fluid">
@@ -130,12 +171,13 @@ function Status() {
               <div className="scan-status ml-4">
                 <div className="fix-section">
                   <div className="fix">
+                  {count !== null && (
                     <h3 className="font-bold text-medium font-sans">
-                      {outdatedDriverCount} outdated driver found
+                      {count} outdated driver found
                     </h3>
-
+                  )}
                     <h6 className="text-xs font-medium">
-                      Last Scan : 28/02/2024
+                      Last Scan : {latestBackupDate}
                     </h6>
 
                     <h6 className="text-xs font-medium ">
