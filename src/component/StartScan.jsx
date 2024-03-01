@@ -149,7 +149,7 @@ export default function StartScan({ value = 0 }) {
           {isScanning ? "Stop Scan" : "Start Scan"}
         </button>
       </div>
-      {handleRedirect("scan-registry", 15000)}
+      {handleRedirect("scan-registry", 19000)}
     </>
   ) : (
     <ScanRegistry />

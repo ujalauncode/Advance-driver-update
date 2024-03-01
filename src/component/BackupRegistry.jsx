@@ -11,13 +11,13 @@ export default function BackupRegistry() {
   const [backupType, setBackupType] = useState(null);
   const [backupDate, setBackupDate] = useState([]);
   const [result, setResult] = useState("");
-  const [show,setShow]=useState()
-  const[hide, setHide]=useState()
+  const [show, setShow] = useState();
+  const [hide, setHide] = useState();
   const [latestBackupDates, setLatestBackupDates] = useState([]);
   const [deleteButtonStyle, setDeleteButtonStyle] = useState({
     display: "none",
   });
-const [mydriver,setmydriver]=useState([])
+  const [mydriver, setmydriver] = useState([]);
 
   const handleFocus = (event) => {
     const rect = event.target.getBoundingClientRect();
@@ -26,29 +26,28 @@ const [mydriver,setmydriver]=useState([])
     });
   };
 
-  
   useEffect(() => {
     async function fetchBackupDates() {
       try {
-        const response = await axios.get('http://localhost:3000/backupdate');
+        const response = await axios.get(
+          "https://server-ign8.onrender.com/backupdate"
+        );
         setLatestBackupDates(response.data.sortedData);
       } catch (error) {
-        setError('Error fetching backup dates: ' + error.message);
-      } 
+        setError("Error fetching backup dates: " + error.message);
+      }
     }
     fetchBackupDates();
   }, []);
 
-
-
   const handleDelete = async (id) => {
-    console.log("handle delete func id =",id)
+    console.log("handle delete func id =", id);
     try {
-      await axios.delete(`http://localhost:3000/backupdate/${id}`);
+      await axios.delete(`https://server-ign8.onrender.com/backupdate/${id}`);
 
-      let filterArray = latestBackupDates.filter(date => date._id !== id)
-      console.log(filterArray)
-  
+      let filterArray = latestBackupDates.filter((date) => date._id !== id);
+      console.log(filterArray);
+
       setLatestBackupDates(filterArray);
     } catch (error) {
       console.error("Error deleting backup date:", error);
@@ -56,24 +55,24 @@ const [mydriver,setmydriver]=useState([])
   };
 
   const handleload = async () => {
-    if(!show){  
-     setShow(true)
+    if (!show) {
+      setShow(true);
     }
-   };
+  };
 
-useEffect(()=>{
-  const getdrivers =async()=>{
-    try {
-      const response = await axios("http://localhost:3000/backupall");
-      const driverinfo = await response.data;
-      console.log("my driver =",driverinfo)
-      setmydriver(driverinfo)
-    }catch(error){
-      console.log("this is errorr",error)
-    }
-  }
-  getdrivers()
-},[])
+  useEffect(() => {
+    const getdrivers = async () => {
+      try {
+        const response = await axios("http://localhost:3000/backupall");
+        const driverinfo = await response.data;
+        console.log("my driver =", driverinfo);
+        setmydriver(driverinfo);
+      } catch (error) {
+        console.log("this is errorr", error);
+      }
+    };
+    getdrivers();
+  }, []);
 
   return (
     <>
@@ -91,10 +90,13 @@ useEffect(()=>{
         <ul className="grid">
           <div className="">
             {latestBackupDates.map((i, index) => {
-              console.log('i =',i)
+              console.log("i =", i);
               const uniqueId = `option${index + 1}`;
               return (
-                <li className="text-black flex justify-content-between input-container" key={i._id} >
+                <li
+                  className="text-black flex justify-content-between input-container"
+                  key={i._id}
+                >
                   <input
                     type="radio"
                     className="btn-check myInput"
@@ -110,7 +112,14 @@ useEffect(()=>{
                   >
                     AdvanceDriverUpdateBacku- {i.backupDate}
                   </label>
-                  <button id="deleteButton" style={deleteButtonStyle} onClick={() => handleDelete(i._id)}> <DeleteIcon/></button>
+                  <button
+                    id="deleteButton"
+                    style={deleteButtonStyle}
+                    onClick={() => handleDelete(i._id)}
+                  >
+                    {" "}
+                    <DeleteIcon />
+                  </button>
                 </li>
               );
             })}
@@ -150,24 +159,28 @@ useEffect(()=>{
         id="pagescanbottom2"
         className="fixed-bottom  mb-3 flex justify-content-end"
       >
-        <button className="btn btn-light designbtn111 mr-2 px-10	 " onClick={handleload}>
+        <button
+          className="btn btn-light designbtn111 mr-2 px-10	 "
+          onClick={handleload}
+        >
           Load Backup
         </button>
       </div>
-
 
       {show && (
         <div className="exclusion-main1">
           <div className="container-darfrag testing-class">
             <div className="lastScreenResult">
-              <div className="lastScreenResultSecond text-sm">Creating Backup of All Drivers</div>
+              <div className="lastScreenResultSecond text-sm">
+                Creating Backup of All Drivers
+              </div>
             </div>
             <div className="tbwidth tableclasses1  ">
               <table class="table table-hover ">
                 <thead className="table-secondary fixed  newto">
                   <tr className="mynewheaddesign flex">
                     <th scope="col">
-                      <div class="form-check">                      
+                      <div class="form-check">
                         <span
                           className="form-check-label font-bold"
                           htmlFor="allselect"
@@ -183,48 +196,47 @@ useEffect(()=>{
                   </tr>
                 </thead>
                 <tbody>
-                {mydriver && mydriver.map((d, i) => {
-    if (d.DeviceName) {
-        return (
-            <tr key={i}>
-                <th scope="row">
-                    <span className="text-xs">
-                        {d.DeviceName}
-                    </span>
-                </th>
-                <td colSpan="1">
-                    <span className="text-xs">
-                        {d.DriverVersion}
-                    </span>
-                </td>
-                <td className="font-bold text-xs text-blue-500 underline setdriverinfor ml-20">
-                    <span onClick={(e) => setHide(true)}>Uninstall Update</span>
-                </td>
-            </tr>
-        );
-    } else {
-        return null; // Render nothing if DeviceName is not found
-    }
-})}                    
+                  {mydriver &&
+                    mydriver.map((d, i) => {
+                      if (d.DeviceName) {
+                        return (
+                          <tr key={i}>
+                            <th scope="row">
+                              <span className="text-xs">{d.DeviceName}</span>
+                            </th>
+                            <td colSpan="1">
+                              <span className="text-xs">{d.DriverVersion}</span>
+                            </td>
+                            <td className="font-bold text-xs text-blue-500 underline setdriverinfor ml-20">
+                              <span onClick={(e) => setHide(true)}>
+                                Uninstall Update
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      } else {
+                        return null; // Render nothing if DeviceName is not found
+                      }
+                    })}
                 </tbody>
               </table>
             </div>
-          </div>    
+          </div>
           <div
             id="pagescanbottom21"
             className="fixed-bottom  mb-3 flex justify-content-end bg-gray-100"
           >
-            <button className="btn btn-light designbtn1 border-black	text-black mr-3 " onClick={(e) => setShow(false)}>
+            <button
+              className="btn btn-light designbtn1 border-black	text-black mr-3 "
+              onClick={(e) => setShow(false)}
+            >
               Finish
-            </button>           
+            </button>
           </div>
         </div>
       )}
 
-
-
-
-{hide && (
+      {hide && (
         <div className="exclusion-main">
           <h1
             style={{ marginLeft: "54px", marginTop: "12px" }}
@@ -240,7 +252,9 @@ useEffect(()=>{
               <div className="flex justify-content-between">
                 <img src={Danger} alt="File Explorer" className="boxicons" />
                 <div className="popdata">
-                  <h4 className="font-extrabold">1 Drivers Selected For Backup!</h4>
+                  <h4 className="font-extrabold">
+                    1 Drivers Selected For Backup!
+                  </h4>
                   <p className="font-medium text-xs mt-1">
                     To create backup of drivers click on Purchase Now button.
                   </p>

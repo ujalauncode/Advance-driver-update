@@ -44,7 +44,7 @@ export default function RegisterPopupComponent({ onClose }) {
         <div className="popup-content">
           <div className="registernowbody">
             <div className="registernowfistpara">
-              <p>Thank you for Trying DevCleaner Pro!</p>
+              <p>Thank you for Trying Advance Driver Update!</p>
             </div>
             <div
              

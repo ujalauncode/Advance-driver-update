@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import StartScan from "./StartScan";
 import desktop from "../Image/desktop.png";
 import WindowIcon from "@mui/icons-material/Window";
@@ -27,6 +27,38 @@ function Status() {
   const [systemInformation, setSystemInformation] = useState();
   const [count, setCount] = useState(null);
   const [latestBackupDate, setLatestBackupDate] = useState('');
+  const [d,setd]=useState([])
+  const buttonRef = useRef(null);
+
+  useEffect(() => {
+    // Function to start the scan automatically
+    const startScanAutomatically = () => {
+      if (buttonRef.current) {
+        buttonRef.current.click();
+      }
+    };
+    startScanAutomatically();
+  }, []);
+
+  const handleStartScan = () => {
+    setCleanerStart("scan-registry");
+  };
+
+
+useEffect(() => {
+  const fetchDrivers = async () => {
+    try {
+      const res = await axios.get('http://localhost:3000/outdatedDrivers');
+     const a =res.data
+      console.log("this is outdated drivers",a)
+     
+    } catch (error) {
+      console.error('Error:', error);
+     
+    }
+  };
+  fetchDrivers();
+}, []);
 
   // useEffect(() => {
   //   async function fetchBackupDates() {
@@ -130,6 +162,16 @@ function Status() {
         console.error('Error fetching outdated drivers count:', error);
       });
   }, []); 
+  useEffect(() => {
+    axios.get('http://localhost:3000/outdatedDrivers')
+      .then(response => {
+        setCount(response.data.count);
+      })
+      .catch(error => {
+        setError('Error fetching outdated drivers count');
+        console.error('Error fetching outdated drivers count:', error);
+      });
+  }, []); 
 
 
   useEffect(() => {
@@ -155,10 +197,6 @@ function Status() {
   }, []);
 
 
-
-
-
-
   return cleanerStart === "status" ? (
     <>
       <div className="container-fluid">
@@ -173,11 +211,11 @@ function Status() {
                   <div className="fix">
                   {count !== null && (
                     <h3 className="font-bold text-medium font-sans">
-                      {count} outdated driver found
+                      {count}  outdated driver found
                     </h3>
                   )}
                     <h6 className="text-xs font-medium">
-                      Last Scan : {latestBackupDate}
+                      Last Scan : 29/02/2024 
                     </h6>
 
                     <h6 className="text-xs font-medium ">

@@ -59,8 +59,6 @@ useEffect(() => {
   }
 }, [isScanning]);
 
-
-
 const handleupdateofdriver =(driverId)=>{
   if(!hide){
     setHide(true)
@@ -254,8 +252,6 @@ const handleSelect = (e) => {
   setSelectedCount(selectedOutdatedCount);
 };
 
-
-
   const updatedrive = () => {
     if (!showdriver) {
         setShowdriver(true);
@@ -270,12 +266,11 @@ const handleSelect = (e) => {
     }
 };
 
-
-
 const handleUpdateDriverStatus = async (driverId) => {
   try {
     const updatedDrivers = drivers.map(driver => {
       if (driver._id === driverId) {
+        
         return {
           ...driver,
           DriverStatus: "Up to date",
@@ -286,15 +281,19 @@ const handleUpdateDriverStatus = async (driverId) => {
       }
       return driver;
     });
-    setDrivers(updatedDrivers);
-    
-    const response = await axios.put(`http://localhost:3000/api/outdatedDrivers/${driverId}`, {});
+  const a =  setDrivers(updatedDrivers);
+    console.log(a)
+    const response = await axios.put(`http://localhost:3000/api/outdatedDrivers/${id}`, {});
+    console.log(id)
     console.log("Driver status updated successfully:", response.data);
     
   } catch (error) {
     console.error("Error updating driver status:", error);
   }
 };
+
+
+
 
   return cleanerStart === "status" ? (
     <>
