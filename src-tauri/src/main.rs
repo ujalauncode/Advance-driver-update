@@ -32,6 +32,7 @@ fn mine_driver() -> Result<String, String> {
 }
 
 use tokio;
+use std::convert::TryInto;
 
 use mongodb::{Client, Collection};
 use serde::Serialize;
@@ -125,22 +126,28 @@ fn __cmd__testing() -> SystemInfo {
     let product_id_str = String::from_utf8_lossy(&product_id).lines().nth(1).unwrap_or("").trim().to_string();
 
     let memory_info = Command::new("wmic")
-        .args(&["memorychip", "get", "Capacity"])
-        .stdout(Stdio::piped())
-        .creation_flags(0x08000000) // CREATE_NO_WINDOW flag
+    .args(&["ComputerSystem", "get", "TotalPhysicalMemory"])
+    .stdout(Stdio::piped())
+    .creation_flags(0x08000000) // CREATE_NO_WINDOW flag
+    .output()
+    .expect("Failed to execute command")
+    .stdout;
 
-        .output()
-        .expect("Failed to execute command")
-        .stdout;
+let memory_info_str = String::from_utf8_lossy(&memory_info)
+    .lines()
+    .nth(1)
+    .unwrap_or("")
+    .trim()
+    .to_string();
 
-    let memory_info_str = String::from_utf8_lossy(&memory_info).lines().nth(1).unwrap_or("").trim().to_string();
+// Convert memory info from bytes to gigabytes
+let memory_info_gb = match memory_info_str.parse::<u64>() {
+    Ok(bytes) => bytes / (1024 * 1024 * 1024), // Convert bytes to gigabytes
+    Err(_) => 0, // Handle parse errors gracefully
+};
 
-    // Convert memory info from bytes to gigabytes
-    let memory_info_gb = match memory_info_str.parse::<u64>() {
-        Ok(bytes) => bytes / (1024 * 1024 * 1024), // Convert bytes to gigabytes
-        Err(_) => 0, // Handle parse errors gracefully
-    };
-    let memory_info_gb_str = format!("{}", memory_info_gb);
+// Round up the memory size to the nearest whole number of gigabytes
+let rounded_memory_size_gb: u64 = (memory_info_gb as f64).ceil() as u64;
   
     SystemInfo {
         os_info: os_info_str,
@@ -148,11 +155,13 @@ fn __cmd__testing() -> SystemInfo {
         disk_info: disk_info_gb_str,
         video_controller_info: video_controller_info_str,
         product_id: product_id_str,
-        memory_info: memory_info_gb_str,
+        memory_info:format!("{} ", rounded_memory_size_gb),
     }
 
    
 }
+
+
 
 #[tauri::command]
 fn __cmd__checkagain() -> String {

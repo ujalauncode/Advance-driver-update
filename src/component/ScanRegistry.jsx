@@ -11,13 +11,15 @@ import Logo from "../Image/money-back-in-60-days-guarantee-badge-golden-medal-ve
 import axios from "axios";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { invoke } from '@tauri-apps/api/tauri';
-
 import giphy from "../Image/giphy.gif";
-
 import { NavLink, useNavigate } from "react-router-dom";
 import CheckIcon from '@mui/icons-material/Check';
 import ErrorIcon from '@mui/icons-material/Error';
+
+
 export default function ScanRegistry() {
+
+  
   const [cleanerStart, setCleanerStart] = useState("status");
   const [exclusionStatus, setExclusionStatus] = useState(false);
   const [hide, setHide] = useState(false);
@@ -27,6 +29,7 @@ const[show, setShow]=useState(false)
   const [selectedCount, setSelectedCount] = useState(0);
   const currentDate = new Date().toLocaleDateString();
   const [systemInformation, setSystemInformation] = useState()
+  
   const [comparisonResult, setComparisonResult] = useState([]);
   const [updateStatus, setUpdateStatus] = useState('');
 const [showdriver,setShowdriver]=useState()
@@ -37,7 +40,8 @@ const [driversUpdated, setDriversUpdated] = useState(false);
 const [outdatedDriverCount, setOutdatedDriverCount] = useState(0);
 const [systemInfo,setSystemInfo]=useState()
 const [updatesuccessful,setupdatesuccessful]=useState()
-const [drivers, setDrivers] = useState([]);
+const [deviceName , setDeviceName] = useState()
+const [count, setCount] = useState(null);
 
 
 
@@ -59,11 +63,12 @@ useEffect(() => {
   }
 }, [isScanning]);
 
-const handleupdateofdriver =(driverId)=>{
+const handleupdateofdriver =(_id,DeviceName)=>{
   if(!hide){
     setHide(true)
+    setDeviceName(DeviceName)
     setDriversUpdated(true);
-    handleUpdateDriverStatus(driverId);
+    handleUpdateDriverStatus(_id);
 
    }
 }
@@ -103,11 +108,12 @@ useEffect(() => {
   const fetchDataAndStoreOutdatedDrivers = async () => {
     try {
       const responseProductID = await invoke("__cmd__testing");
-            const productID = responseProductID.product_id;
-      console.log("id is ===",productID)
-      
+      const productID = responseProductID.product_id;
+      console.log("id is ===", productID);
+
       const responseDriver = await invoke('mine_driver');
       const driverinfo = JSON.parse(responseDriver);
+      console.log("all data ===", driverinfo);
 
       let outdatedDrivers = [];
       let updatedDrivers = [];
@@ -117,9 +123,9 @@ useEffect(() => {
           outdatedDrivers.push({
             ...driver,
             DriverStatus: "Outdated",
-            StatusColor: "#EB9C35",
+            StatusColor: "#0C6B37",
             StatusIcon: <ErrorIcon style={{ fontSize: "small" }} />,
-            StatusTextWeight: 'bolder'
+            StatusTextWeight: 'normal'
           });
         } else {
           updatedDrivers.push({
@@ -132,19 +138,53 @@ useEffect(() => {
         }
       });
 
-      const updatedDriverInfo = [...outdatedDrivers, ...updatedDrivers];
-      setSystemInformation(updatedDriverInfo);
       setOutdatedDriverCount(outdatedDrivers.length);
-      const res = await axios.post('http://localhost:3000/api/outdatedDrivers', { outdatedDrivers, productID });
-      console.log("Outdated drivers stored in MongoDB:", res.data);
+
+      // No need to set the state here since we are merging the data later
+      return { outdatedDrivers, updatedDrivers, productID };
     } catch (error) {
       console.error("Error fetching and storing driver information:", error);
     }
   };
 
-  fetchDataAndStoreOutdatedDrivers();
+  const fetchAndMergeDrivers = async () => {
+    try {
+      const { outdatedDrivers, updatedDrivers, productID } = await fetchDataAndStoreOutdatedDrivers();
 
-}, [selectedNumber]); 
+      const res = await axios.get('http://localhost:3000/outdatedDrivers');
+      const driversData = res.data;
+      console.log("this is outdated drivers", driversData);
+
+      const mergedDrivers = [...updatedDrivers, ...driversData];
+      mergedDrivers.sort((a, b) => {
+        if (a.DriverStatus === "Outdated" && b.DriverStatus === "Up to date") {
+          return -1; 
+        } else if (a.DriverStatus === "Up to date" && b.DriverStatus === "Outdated") {
+          return 1; 
+        } else {
+          return 0; 
+        }
+      });
+
+      setSystemInformation(mergedDrivers);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const postOutdatedDrivers = async (outdatedDrivers, productID) => {
+    try {
+      const res = await axios.post('http://localhost:3000/api/outdatedDrivers', { outdatedDrivers, productID });
+      console.log("Outdated drivers stored in MongoDB:", res.data);
+    } catch (error) {
+      console.error("Error posting outdated drivers:", error);
+    }
+  };
+
+  fetchAndMergeDrivers(); // Fetch and merge drivers
+  postOutdatedDrivers(); // Post outdated drivers
+}, [selectedNumber]);
+
 
 useEffect(() => {
   localStorage.setItem('selectedNumber', selectedNumber);
@@ -266,33 +306,50 @@ const handleSelect = (e) => {
     }
 };
 
-const handleUpdateDriverStatus = async (driverId) => {
+// useEffect(() => {
+//   const fetchDrivers = async () => {
+//     try {
+//       const res = await axios.get('http://localhost:3000/outdatedDrivers');
+//      const driversData =res.data
+//       console.log("this is outdated drivers",driversData)
+
+//       const mergedDrivers = [...updatedDriverInfo, ...driversData];
+//       setSystemInformation(mergedDrivers);
+
+     
+//     } catch (error) {
+//       console.error('Error:', error);
+     
+//     }
+//   };
+//   fetchDrivers();
+// }, []);
+
+const handleUpdateDriverStatus = async (_id) => {
   try {
-    const updatedDrivers = drivers.map(driver => {
-      if (driver._id === driverId) {
-        
-        return {
-          ...driver,
-          DriverStatus: "Up to date",
-          StatusColor: "#0C6B37",
-          StatusIcon: <CheckIcon style={{ fontSize: 'small' }} />,
-          StatusTextWeight: 'normal'
-        };
-      }
-      return driver;
-    });
-  const a =  setDrivers(updatedDrivers);
-    console.log(a)
-    const response = await axios.put(`http://localhost:3000/api/outdatedDrivers/${id}`, {});
-    console.log(id)
-    console.log("Driver status updated successfully:", response.data);
-    
+    const response = await axios.put(`http://localhost:3000/api/outdatedDrivers/${_id}`);
+    console.log("outdated drivers id ==", id)
+    if (response.status === 200) {
+      console.log('Driver status updated successfully');
+    } else {
+      console.error('Failed to update driver status');
+    }
+    console.log("driverId",_id)
   } catch (error) {
-    console.error("Error updating driver status:", error);
+    console.error('Error updating driver status:', error);
   }
 };
-
-
+useEffect(() => {
+  axios.get('http://localhost:3000/api/outdatedDrivers/count')
+    .then(response => {
+    const c =  setCount(response.data.count);
+console.log("total outdated drivers are ==",c)
+    })
+    .catch(error => {
+      setError('Error fetching outdated drivers count');
+      console.error('Error fetching outdated drivers count:', error);
+    });
+}, []); 
 
 
   return cleanerStart === "status" ? (
@@ -302,7 +359,7 @@ const handleUpdateDriverStatus = async (driverId) => {
           <div className="col-12 col-lg-12 col-md-12 col-sm-12">
             <div className=" scantopoftable ">
               <div className="designspan font-black text-small">             
-              <WatchLaterIcon /> {outdatedDriverCount} Out-Of-Date Drivers Found             
+              <WatchLaterIcon /> {count} Out-Of-Date Drivers Found             
               </div>
               <button
                 className="btn btn-light designbtn"
@@ -346,7 +403,9 @@ const handleUpdateDriverStatus = async (driverId) => {
                   
                   systemInformation && systemInformation.map((driver, i) => {
                       return (
-                        <tr key={i._id}>
+                        <tr key={i.id}>
+                                                  {console.log("iddddddddd", driver._id)}
+
                           <th scope="row">
                             <div class="form-check">
                               <input
@@ -382,7 +441,7 @@ const handleUpdateDriverStatus = async (driverId) => {
                             {driver.DriverStatus === "Outdated" ? (
                               <span
                                 className="font-bold text-xs text-blue-500 underline setdriverinfor " 
-                                 onClick={() => handleupdateofdriver(driver._id)}
+                                onClick={() => handleupdateofdriver(driver._id, driver.DeviceName)}
                               >
                                 Update Driver
                               </span>
@@ -626,7 +685,7 @@ const handleUpdateDriverStatus = async (driverId) => {
      <div className="minenewpop">
      <div className="flex place-content-evenly mt-2 text-xs pt-2">
    
-     <span className=""> Device Name : WAN Miniport (Network Monitor)</span>      
+     <span className=""> Device Name : {deviceName}</span>      
      </div>
      <div className="StartScan flex justify-content-between">
       

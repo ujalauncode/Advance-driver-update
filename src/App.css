@@ -64,7 +64,14 @@ body {
 }
 .newoutdatedd{
   font-weight: 900;
+  color: #2a2a2a;
+  line-height: 12px !important;
   font-size: 13px;
+  padding-bottom: 2px;
+
+}
+.checkkk{
+  background-color: lightgray;
 }
 .box-icon1 {
   height: 50px !important;
@@ -1714,7 +1721,7 @@ position: fixed !important;
   margin-top: 7px;
   font-weight: 500;
   margin-top: 16px;
-  border: #3c4fe0 1px solid;
+  /* border: #3c4fe0 1px solid; */
   color: #3c4fe0;
   padding-left: 28px;
   padding-right: 28px;

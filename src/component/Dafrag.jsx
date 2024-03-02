@@ -234,10 +234,10 @@ function Dafrag({ currentDate, setCurrentDate }) {
             id="pagescanbottom21"
             className="fixed-bottom  mb-3 flex justify-content-end bg-gray-100"
           >
-            <button className="btn btn-light designbtn1 border-black	text-black " onClick={(e) => setshow(false)}>
+            <button className="btn btn-light designbtn1 checkkk	text-black " onClick={(e) => setshow(false)}>
               Finish
             </button>
-            <button className="btn btn-light designbtn1 mr-2 border-black	 text-black "  onClick={handleScanToggle}>
+            <button className="btn btn-light designbtn1 mr-2	checkkk text-black "  onClick={handleScanToggle}>
             {isScanning ? "Stop Backup" : "Start Backup"}
             </button>
           </div>

@@ -10,7 +10,7 @@ import minewin from "../Image/minewin.png";
 import { invoke } from "@tauri-apps/api/tauri";
 
 import giphy from "../Image/giphy.gif";
-
+import graph from "../Image/graph.png"
 import CheckIcon from "@mui/icons-material/Check";
 import ErrorIcon from "@mui/icons-material/Error";
 
@@ -22,10 +22,9 @@ function Status() {
   const [driverCount, setDriverCount] = useState(0);
   const [comparisonResult, setComparisonResult] = useState([]);
   const [lastScanDateTime, setLastScanDateTime] = useState(null);
-  const [latestBackupDates, setLatestBackupDates] = useState([]);
   const [outdatedDriverCount, setOutdatedDriverCount] = useState(0);
   const [systemInformation, setSystemInformation] = useState();
-  const [count, setCount] = useState(null);
+  const [count, setCount] = useState();
   const [latestBackupDate, setLatestBackupDate] = useState('');
   const [d,setd]=useState([])
   const buttonRef = useRef(null);
@@ -162,8 +161,9 @@ useEffect(() => {
         console.error('Error fetching outdated drivers count:', error);
       });
   }, []); 
+
   useEffect(() => {
-    axios.get('http://localhost:3000/outdatedDrivers')
+    axios.get('http://localhost:3000/api/outdatedDrivers/count')
       .then(response => {
         setCount(response.data.count);
       })
@@ -172,7 +172,6 @@ useEffect(() => {
         console.error('Error fetching outdated drivers count:', error);
       });
   }, []); 
-
 
   useEffect(() => {
     async function fetchLatestBackupDate() {
@@ -201,6 +200,7 @@ useEffect(() => {
     <>
       <div className="container-fluid">
         <div className="row">
+          <div></div>
           <div className="col-12 col-lg-12 scan-container mx-2">
             <div>
               <button className="btn text-xs font-semibold btnofstatus">
@@ -215,7 +215,7 @@ useEffect(() => {
                     </h3>
                   )}
                     <h6 className="text-xs font-medium">
-                      Last Scan : 29/02/2024 
+                      Last Scan : {latestBackupDate}
                     </h6>
 
                     <h6 className="text-xs font-medium ">
@@ -307,7 +307,9 @@ useEffect(() => {
                       </li>
                     </div>
                     <div className="flex mt-2">
-                      <WindowIcon color="primary" className="box-icon " />
+                      {/* <WindowIcon color="primary" className="box-icon " /> */}
+                      <img src={graph} alt=""  className="box-icon "/>
+
                       <li className="text-black ">
                         <h6 className="text-xs">Graphics</h6>{" "}
                         <h5 className="text-sm font-semibold font-sans">
