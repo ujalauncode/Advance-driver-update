@@ -9,348 +9,250 @@ import Calendar from "../Image/icons8-calendar-50.png";
 import Computer from "../Image/icons8-desktop-50.png";
 import Logo from "../Image/money-back-in-60-days-guarantee-badge-golden-medal-vector-20372626-removebg-preview.png";
 import axios from "axios";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { invoke } from '@tauri-apps/api/tauri';
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { invoke } from "@tauri-apps/api/tauri";
 import giphy from "../Image/giphy.gif";
 import { NavLink, useNavigate } from "react-router-dom";
-import CheckIcon from '@mui/icons-material/Check';
-import ErrorIcon from '@mui/icons-material/Error';
-
+import CheckIcon from "@mui/icons-material/Check";
+import ErrorIcon from "@mui/icons-material/Error";
 
 export default function ScanRegistry() {
-
-  
   const [cleanerStart, setCleanerStart] = useState("status");
   const [exclusionStatus, setExclusionStatus] = useState(false);
   const [hide, setHide] = useState(false);
-const[show, setShow]=useState(false)
+  const [show, setShow] = useState(false);
   const [driverData, setDriverData] = useState([]);
   const [driverCount, setDriverCount] = useState(0);
   const [selectedCount, setSelectedCount] = useState(0);
   const currentDate = new Date().toLocaleDateString();
-  const [systemInformation, setSystemInformation] = useState()
-  
+  const [systemInformation, setSystemInformation] = useState();
+
   const [comparisonResult, setComparisonResult] = useState([]);
-  const [updateStatus, setUpdateStatus] = useState('');
-const [showdriver,setShowdriver]=useState()
-const [isScanning, setIsScanning] = useState(false);
-const [percentage, setPercentage] = useState(0);
-const [updateCompleted, setUpdateCompleted] = useState(false);
-const [driversUpdated, setDriversUpdated] = useState(false);
-const [outdatedDriverCount, setOutdatedDriverCount] = useState(0);
-const [systemInfo,setSystemInfo]=useState()
-const [updatesuccessful,setupdatesuccessful]=useState()
-const [deviceName , setDeviceName] = useState()
-const [count, setCount] = useState(null);
+  const [updateStatus, setUpdateStatus] = useState("");
+  const [showdriver, setShowdriver] = useState();
+  const [isScanning, setIsScanning] = useState(false);
+  const [percentage, setPercentage] = useState(0);
+  const [updateCompleted, setUpdateCompleted] = useState(false);
+  const [driversUpdated, setDriversUpdated] = useState(false);
+  const [outdatedDriverCount, setOutdatedDriverCount] = useState(0);
+  const [systemInfo, setSystemInfo] = useState();
+  const [updatesuccessful, setupdatesuccessful] = useState();
+  const [deviceName, setDeviceName] = useState();
+  const [count, setCount] = useState(null);
 
 
-
-useEffect(() => {
-  if (isScanning) {
+  useEffect(() => {
+    if (isScanning) {
       const intervalId = setInterval(() => {
-          setPercentage((prevPercentage) => {
-              const nextPercentage = Math.min(prevPercentage + 1, 100);
-              if (nextPercentage === 100) {
-                  clearInterval(intervalId);
-                  setUpdateCompleted(true);
-              }
-              return nextPercentage;
-          });
+        setPercentage((prevPercentage) => {
+          const nextPercentage = Math.min(prevPercentage + 1, 100);
+          if (nextPercentage === 100) {
+            clearInterval(intervalId);
+            setUpdateCompleted(true);
+          }
+          return nextPercentage;
+        });
       }, 100);
       return () => {
-          clearInterval(intervalId);
+        clearInterval(intervalId);
       };
-  }
-}, [isScanning]);
-
-const handleupdateofdriver =(_id,DeviceName)=>{
-  if(!hide){
-    setHide(true)
-    setDeviceName(DeviceName)
-    setDriversUpdated(true);
-    handleUpdateDriverStatus(_id);
-
-   }
-}
-
-useEffect(() => {
-  const fetchSystemInfo = async () => {
-    try {
-      const response = await invoke("__cmd__testing");
-      const a = {
-        cpu_info: response.cpu_info,
-        os_info: response.os_info,
-        disk_info: response.disk_info,
-        memory_info: response.memory_info,
-        video_controller_info: response.video_controller_info,
-        product_id:response.product_id
-      };
-      setSystemInfo(a);
-    } catch (error) {
-      setError(error.message);
     }
-  };
-  fetchSystemInfo();
-}, []);
+  }, [isScanning]);
 
-const outdatedDriverNumbers = [20, 26, 32, 28, 37, 27, 40, 22, 18, 34, 24, 39, 17, 46, 38, 42, 33, 23, 21, 26];
-
-const getRandomNumber = () => {
-  const randomIndex = Math.floor(Math.random() * outdatedDriverNumbers.length);
-  return outdatedDriverNumbers[randomIndex];
-};
-
-const [selectedNumber, setSelectedNumber] = useState(() => {
-  const storedNumber = localStorage.getItem('selectedNumber');
-  return storedNumber ? parseInt(storedNumber, 10) : getRandomNumber();
-});
-useEffect(() => {
-  const fetchDataAndStoreOutdatedDrivers = async () => {
-    try {
-      const responseProductID = await invoke("__cmd__testing");
-      const productID = responseProductID.product_id;
-      console.log("id is ===", productID);
-
-      const responseDriver = await invoke('mine_driver');
-      const driverinfo = JSON.parse(responseDriver);
-      console.log("all data ===", driverinfo);
-
-      let outdatedDrivers = [];
-      let updatedDrivers = [];
-
-      driverinfo.forEach((driver, index) => {
-        if (index + 1 <= selectedNumber) { // Check against selectedNumber
-          outdatedDrivers.push({
-            ...driver,
-            DriverStatus: "Outdated",
-            StatusColor: "#0C6B37",
-            StatusIcon: <ErrorIcon style={{ fontSize: "small" }} />,
-            StatusTextWeight: 'normal'
-          });
-        } else {
-          updatedDrivers.push({
-            ...driver,
-            DriverStatus: "Up to date",
-            StatusColor: "#0C6B37",
-            StatusIcon: <CheckIcon style={{ fontSize: 'small' }} />,
-            StatusTextWeight: 'normal'
-          });
-        }
-      });
-
-      setOutdatedDriverCount(outdatedDrivers.length);
-
-      // No need to set the state here since we are merging the data later
-      return { outdatedDrivers, updatedDrivers, productID };
-    } catch (error) {
-      console.error("Error fetching and storing driver information:", error);
+  const handleupdateofdriver = (_id, DeviceName) => {
+    if (!hide) {
+      setHide(true);
+      setDeviceName(DeviceName);
+      setDriversUpdated(true);
+      handleUpdateDriverStatus(_id);
     }
   };
 
-  const fetchAndMergeDrivers = async () => {
-    try {
-      const { outdatedDrivers, updatedDrivers, productID } = await fetchDataAndStoreOutdatedDrivers();
+  useEffect(() => {
+    const fetchSystemInfo = async () => {
+      try {
+        const response = await invoke("__cmd__testing");
+        const a = {
+          cpu_info: response.cpu_info,
+          os_info: response.os_info,
+          disk_info: response.disk_info,
+          memory_info: response.memory_info,
+          video_controller_info: response.video_controller_info,
+          product_id: response.product_id,
+        };
+        setSystemInfo(a);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    fetchSystemInfo();
+  }, []);
 
-      const res = await axios.get('http://localhost:3000/outdatedDrivers');
-      const driversData = res.data;
-      console.log("this is outdated drivers", driversData);
+  const outdatedDriverNumbers = [
+    20, 26, 32, 28, 37, 27, 40, 22, 18, 34, 24, 39, 17, 46, 38, 42, 33, 23, 21,
+    26,
+  ];
 
-      const mergedDrivers = [...updatedDrivers, ...driversData];
-      mergedDrivers.sort((a, b) => {
-        if (a.DriverStatus === "Outdated" && b.DriverStatus === "Up to date") {
-          return -1; 
-        } else if (a.DriverStatus === "Up to date" && b.DriverStatus === "Outdated") {
-          return 1; 
-        } else {
-          return 0; 
-        }
-      });
-
-      setSystemInformation(mergedDrivers);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+  const getRandomNumber = () => {
+    const randomIndex = Math.floor(
+      Math.random() * outdatedDriverNumbers.length
+    );
+    return outdatedDriverNumbers[randomIndex];
   };
 
+  const [selectedNumber, setSelectedNumber] = useState(() => {
+    const storedNumber = localStorage.getItem("selectedNumber");
+    return storedNumber ? parseInt(storedNumber, 10) : getRandomNumber();
+  });
   const postOutdatedDrivers = async (outdatedDrivers, productID) => {
     try {
-      const res = await axios.post('http://localhost:3000/api/outdatedDrivers', { outdatedDrivers, productID });
+      const res = await axios.post(
+        "http://localhost:3000/api/outdatedDrivers",
+        { outdatedDrivers, productID }
+      );
       console.log("Outdated drivers stored in MongoDB:", res.data);
     } catch (error) {
       console.error("Error posting outdated drivers:", error);
     }
   };
-
-  fetchAndMergeDrivers(); // Fetch and merge drivers
-  postOutdatedDrivers(); // Post outdated drivers
-}, [selectedNumber]);
-
-
-useEffect(() => {
-  localStorage.setItem('selectedNumber', selectedNumber);
-}, [selectedNumber]);
-
-
-// useEffect(() => {
-//   const fetchDataAndStoreOutdatedDrivers = async () => {
-//     try {
-//       const responseProductID = await invoke("__cmd__testing");
-//       const productID = responseProductID.product_id;
-// console.log("id is ===",productID)
-//       // Fetch driver information
-      
-//       const randomIndex = Math.floor(Math.random() * outdatedDriverNumbers.length);
-//       const selectedNumber = outdatedDriverNumbers[randomIndex];
-
-//       const responseDriver = await invoke('mine_driver');
-//       const driverinfo = JSON.parse(responseDriver);
-
-//       // const outdatedDriverNumbers = [20, 26, 32, 28, 37, 27, 40, 22, 18, 34, 24, 39, 17, 46, 38,42,33,23,21,26];
-
-//       let outdatedDrivers = [];
-//       let updatedDrivers = [];
-
-//       driverinfo.forEach((driver, index) => {
-//         if (index + 1 <= selectedNumber) { // Check against selectedNumber
-//           outdatedDrivers.push({
-//             ...driver,
-//             DriverStatus: "Outdated",
-//             StatusColor: "#EB9C35",
-//             StatusIcon: <ErrorIcon style={{ fontSize: "small" }} />,
-//             StatusTextWeight: 'bolder'
-//           });
-//         }  else {
-//           updatedDrivers.push({
-//             ...driver,
-//             DriverStatus: "Up to date",
-//             StatusColor: "#0C6B37",
-//             StatusIcon: <CheckIcon style={{ fontSize: 'small' }} />,
-//             StatusTextWeight: 'normal'
-//           });
-//         }
-//       });
-
-//       const updatedDriverInfo = [...outdatedDrivers, ...updatedDrivers];
-
-//       // Update state with driver information
-//       setSystemInformation(updatedDriverInfo);
-//       setOutdatedDriverCount(outdatedDrivers.length);
-
-//       // Store outdated drivers along with product ID in MongoDB
-//       const res = await axios.post('http://localhost:3000/api/outdatedDrivers', { outdatedDrivers, productID });
-//       console.log("Outdated drivers stored in MongoDB:", res.data);
-//     } catch (error) {
-//       console.error("Error fetching and storing driver information:", error);
-//     }
-//   };
-
-//   // Call the function only once on component mount
-//   fetchDataAndStoreOutdatedDrivers();
-
-// }, []);
-
-
-const updateDriverStatus = async (id) => {
-  try {
-    await axios.put(`http://localhost:3000/api/outdatedDrivers/${id}`);
-    // Update the driver status in the frontend after the PUT request is successful
-    const updatedSystemInformation = systemInformation.map(driver => {
-      if (driver._id === id) {
-        return {
-          ...driver,
-          DriverStatus: "Up to date",
-          StatusColor: "#0C6B37",
-          StatusIcon: <CheckIcon style={{ fontSize: 'small' }} />,
-          StatusTextWeight: 'normal'
-        };
+  
+  useEffect(() => {
+    const fetchDataAndStoreOutdatedDrivers = async () => {
+      try {
+        // Fetch product ID and driver information
+        const responseProductID = await invoke("__cmd__testing");
+        const productID = responseProductID.product_id;
+  
+        const responseDriver = await invoke("mine_driver");
+        const driverinfo = JSON.parse(responseDriver);
+  
+        let outdatedDrivers = [];
+        let updatedDrivers = [];
+  
+        // Prepare outdated and updated drivers
+        driverinfo.forEach((driver, index) => {
+          if (index + 1 <= selectedNumber) {
+            outdatedDrivers.push({
+              ...driver,
+              DriverStatus: "Outdated",
+              StatusColor: "#0C6B37",
+              StatusIcon: <ErrorIcon style={{ fontSize: "small" }} />,
+              StatusTextWeight: "normal",
+            });
+          } else {
+            updatedDrivers.push({
+              ...driver,
+              DriverStatus: "Up to date",
+              StatusColor: "#0C6B37",
+              StatusIcon: <CheckIcon style={{ fontSize: "small" }} />,
+              StatusTextWeight: "normal",
+            });
+          }
+        });
+  
+        // Store outdated drivers in MongoDB
+        postOutdatedDrivers(outdatedDrivers, productID);
+  
+        setOutdatedDriverCount(outdatedDrivers.length);
+        return { outdatedDrivers, updatedDrivers, productID };
+      } catch (error) {
+        console.error("Error fetching and storing driver information:", error);
       }
-      return driver;
-    });
-    setSystemInformation(updatedSystemInformation);
-  } catch (error) {
-    console.error('Error updating driver status:', error);
-  }
-};
+    };
+  
+    const fetchAndMergeDrivers = async () => {
+      try {
+        const { outdatedDrivers, updatedDrivers, productID } =
+          await fetchDataAndStoreOutdatedDrivers();
+  
+        // Merge drivers
+        const res = await axios.get("http://localhost:3000/outdatedDrivers");
+        const driversData = res.data;
+        const mergedDrivers = [...updatedDrivers, ...driversData];
+        mergedDrivers.sort((a, b) => a.DriverStatus.localeCompare(b.DriverStatus));
+  
+        setSystemInformation(mergedDrivers);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+  
+    fetchAndMergeDrivers(); // Fetch and merge drivers
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedNumber]);
+  
 
-const handleSelect = (e) => {
-  const { name, checked } = e.target;
+  useEffect(() => {
+    localStorage.setItem("selectedNumber", selectedNumber);
+  }, [selectedNumber]);
 
-  let tempDrivers;
 
-  if (name === "allselect") {
-    tempDrivers = systemInformation.map((driver) => {
-      return { ...driver, ischecked: checked };
-    });
-  } else {
-    tempDrivers = systemInformation.map((driver) =>
-      driver.name === name ? { ...driver, ischecked: checked } : driver
-    );
-  }
+  const handleSelect = (e) => {
+    const { name, checked } = e.target;
 
-  setSystemInformation(tempDrivers);
-  const selectedOutdatedCount = tempDrivers.filter((driver) => driver.ischecked && driver.DriverStatus === "Outdated").length;
-  setSelectedCount(selectedOutdatedCount);
-};
+    let tempDrivers;
+
+    if (name === "allselect") {
+      tempDrivers = systemInformation.map((driver) => {
+        return { ...driver, ischecked: checked };
+      });
+    } else {
+      tempDrivers = systemInformation.map((driver) =>
+        driver.name === name ? { ...driver, ischecked: checked } : driver
+      );
+    }
+
+    setSystemInformation(tempDrivers);
+    const selectedOutdatedCount = tempDrivers.filter(
+      (driver) => driver.ischecked && driver.DriverStatus === "Outdated"
+    ).length;
+    setSelectedCount(selectedOutdatedCount);
+  };
 
   const updatedrive = () => {
     if (!showdriver) {
-        setShowdriver(true);
-        setIsScanning(true);
+      setShowdriver(true);
+      setIsScanning(true);
+      setTimeout(() => {
+        setShowdriver(false);
         setTimeout(() => {
-            setShowdriver(false);
-            setTimeout(() => {
-                setupdatesuccessful(true);
-            }, 100); 
-        }, 10000); 
-        setHide(false);
+          setupdatesuccessful(true);
+        }, 100);
+      }, 10000);
+      setHide(false);
     }
-};
+  };
 
-// useEffect(() => {
-//   const fetchDrivers = async () => {
-//     try {
-//       const res = await axios.get('http://localhost:3000/outdatedDrivers');
-//      const driversData =res.data
-//       console.log("this is outdated drivers",driversData)
-
-//       const mergedDrivers = [...updatedDriverInfo, ...driversData];
-//       setSystemInformation(mergedDrivers);
-
-     
-//     } catch (error) {
-//       console.error('Error:', error);
-     
-//     }
-//   };
-//   fetchDrivers();
-// }, []);
-
-const handleUpdateDriverStatus = async (_id) => {
-  try {
-    const response = await axios.put(`http://localhost:3000/api/outdatedDrivers/${_id}`);
-    console.log("outdated drivers id ==", id)
-    if (response.status === 200) {
-      console.log('Driver status updated successfully');
-    } else {
-      console.error('Failed to update driver status');
+  
+  const handleUpdateDriverStatus = async (_id) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/outdatedDrivers/${_id}`
+      );
+      // console.log("outdated drivers id ==", _id);
+      if (response.status === 200) {
+        console.log("Driver status updated successfully");
+      } else {
+        console.error("Failed to update driver status");
+      }
+      console.log("driverId", _id);
+    } catch (error) {
+      console.error("Error updating driver status:", error);
     }
-    console.log("driverId",_id)
-  } catch (error) {
-    console.error('Error updating driver status:', error);
-  }
-};
-useEffect(() => {
-  axios.get('http://localhost:3000/api/outdatedDrivers/count')
-    .then(response => {
-    const c =  setCount(response.data.count);
-console.log("total outdated drivers are ==",c)
-    })
-    .catch(error => {
-      setError('Error fetching outdated drivers count');
-      console.error('Error fetching outdated drivers count:', error);
-    });
-}, []); 
+  };
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/outdatedDrivers/count")
+      .then((response) => {
+        const c = setCount(response.data.count);
+        console.log("total outdated drivers are ==", c);
+      })
+      .catch((error) => {
+        setError("Error fetching outdated drivers count");
+        console.error("Error fetching outdated drivers count:", error);
+      });
+  }, []);
 
   return cleanerStart === "status" ? (
     <>
@@ -358,8 +260,8 @@ console.log("total outdated drivers are ==",c)
         <div className="row flex justify-content-center">
           <div className="col-12 col-lg-12 col-md-12 col-sm-12">
             <div className=" scantopoftable ">
-              <div className="designspan font-black text-small">             
-              <WatchLaterIcon /> {count} Out-Of-Date Drivers Found             
+              <div className="designspan font-black text-small">
+                <WatchLaterIcon /> {count} Out-Of-Date Drivers Found
               </div>
               <button
                 className="btn btn-light designbtn"
@@ -379,7 +281,10 @@ console.log("total outdated drivers are ==",c)
                   <tr className="mynewheaddesign flex">
                     <th scope="col">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="allselect"
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="allselect"
                           id="allselect"
                           name="allselect"
                           onChange={handleSelect}
@@ -392,19 +297,21 @@ console.log("total outdated drivers are ==",c)
                         </label>
                       </div>
                     </th>
-                    <th scope="col" colspan="1" className="dobold latestpadding">
+                    <th
+                      scope="col"
+                      colspan="1"
+                      className="dobold latestpadding"
+                    >
                       Status
                     </th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                  
-                  systemInformation && systemInformation.map((driver, i) => {
+                  {systemInformation &&
+                    systemInformation.map((driver, i) => {
                       return (
                         <tr key={i.id}>
-                                                  {console.log("iddddddddd", driver._id)}
 
                           <th scope="row">
                             <div class="form-check">
@@ -416,23 +323,35 @@ console.log("total outdated drivers are ==",c)
                                 name={driver.DeviceName}
                                 checked={driver.ischecked}
                                 onChange={handleSelect}
-                                style={{ display: driver.DriverStatus === "Up to date" ? "none" : "block" }}
+                                style={{
+                                  display:
+                                    driver.DriverStatus === "Up to date"
+                                      ? "none"
+                                      : "block",
+                                }}
                               />
                               <label
                                 class="form-check-label"
                                 for={`flexCheckDefault-${i}`}
                               >
-                              {driver.DeviceName}
+                                {driver.DeviceName}
                               </label>
                             </div>
                           </th>
-                          <td colspan="2" style={{paddingLeft:"8rem"}}>
+                          <td colspan="2" style={{ paddingLeft: "8rem" }}>
                             <br />
-                            <span className="text-xs font-black newoutdatedd " style={{ color: driver.StatusColor ,fontWeight: driver.StatusTextWeight}}>
-                              {driver.DriverStatus} {driver.StatusIcon}
+                            <span
+                              className="text-xs font-black newoutdatedd "
+                              style={{
+                                color: driver.StatusColor,
+                                fontWeight: driver.StatusTextWeight,
+                              }}
+                            >
+                              {driver.DriverStatus} {driver.DriverStatus === 'Outdated' ? <ErrorIcon style={{ fontSize: "small" }} /> : <CheckIcon style={{ fontSize: "small" }} />}
+                              {/* {driver.StatusIcon} */}
                             </span>
                             <br />
-                            <span className="text-xs " >
+                            <span className="text-xs ">
                               {" "}
                               Version:{driver.DriverVersion}
                             </span>
@@ -440,14 +359,18 @@ console.log("total outdated drivers are ==",c)
                           <td>
                             {driver.DriverStatus === "Outdated" ? (
                               <span
-                                className="font-bold text-xs text-blue-500 underline setdriverinfor " 
-                                onClick={() => handleupdateofdriver(driver._id, driver.DeviceName)}
+                                className="font-bold text-xs text-blue-500 underline setdriverinfor "
+                                onClick={() =>
+                                  handleupdateofdriver(
+                                    driver._id,
+                                    driver.DeviceName
+                                  )
+                                }
                               >
                                 Update Driver
                               </span>
                             ) : (
-                              <span className="font-bold text-xs text-green-500">
-                              </span>
+                              <span className="font-bold text-xs text-green-500"></span>
                             )}
                           </td>
                         </tr>
@@ -459,7 +382,12 @@ console.log("total outdated drivers are ==",c)
           </div>
         </div>
         <div id="pagescanbottom" className="fixed-bottom ">
-          <button className="btn btn-light designbtn1 "   onClick={(e) => setShow(true)}>Learn More</button>
+          <button
+            className="btn btn-light designbtn1 "
+            onClick={(e) => setShow(true)}
+          >
+            Learn More
+          </button>
           <span className="mt-6 font-serif text-xs font-medium">
             To Update all rest Drivers click on Update All
           </span>
@@ -473,46 +401,72 @@ console.log("total outdated drivers are ==",c)
       </div>
       {hide && (
         <div className="exclusion-main">
-          <h1 style={{ marginLeft: "54px", marginTop: "12px" }} className="font-extrabold">
-            <b>Intel(R) UHD GRAPHICS </b>
+          <h1
+            style={{ marginLeft: "54px", marginTop: "12px" }}
+            className="font-extrabold"
+          >
+            <b>{deviceName} </b>
           </h1>
           <div onClick={(e) => setHide(false)}>
             <span className="close"></span>
           </div>
           <div className="flex justify-content-evenly">
             <div className="designupdate">
-    <div className="design">
-    <span className="font-bold">Driver Status</span><br/>
-    <button className="btn btn-primary mt-2 text-xs rounded-md	">OUTEDATED <WatchLaterIcon sx={{ fontSize: 15 }} /></button><br/>
-    </div>
-           
-<div className="mtgiven ">
-<span className="font-bold ml-2">Availble</span>
-  <span className="flex justify-content-between text-xs mx-2 mt-4">Version: <p>7467.54.5.5.5</p></span><br/>
-  <span className="flex justify-content-between text-xs mx-2">Date: <p>26-02-2-24</p></span>
-</div>
+              <div className="design">
+                <span className="font-bold">Driver Status</span>
+                <br />
+                <button className="btn btn-primary mt-2 text-xs rounded-md	">
+                  OUTEDATED <WatchLaterIcon sx={{ fontSize: 15 }} />
+                </button>
+                <br />
+              </div>
+
+              <div className="mtgiven ">
+                C<span className="font-bold ml-2">Availble</span>
+                <span className="flex justify-content-between text-xs mx-2 mt-4">
+                  Version: <p>7467.54.5.5.5</p>
+                </span>
+                <br />
+                <span className="flex justify-content-between text-xs mx-2">
+                  Date: <p>26-02-2-24</p>
+                </span>
+              </div>
             </div>
             <div className="designupdate1">
               <h1 className="font-semibold">Register now to enjoy:</h1>
               <div className="mt-4 mb-9">
-              <span className="font-thin text-sm mt-3 my-2"><CheckCircleIcon color="primary" sx={{ fontSize: 15 }} /> Update drivers in one click</span><br/>
-              <span className="font-thin text-sm"><CheckCircleIcon color="primary" sx={{ fontSize: 15 }} /> Accelerated download</span><br/>
-              <span className="font-thin mb-4 text-sm"><CheckCircleIcon color="primary" sx={{ fontSize: 15 }} /> Largest driver database</span>
-              
+                <span className="font-thin text-sm mt-3 my-2">
+                  <CheckCircleIcon color="primary" sx={{ fontSize: 15 }} />{" "}
+                  Update drivers in one click
+                </span>
+                <br />
+                <span className="font-thin text-sm">
+                  <CheckCircleIcon color="primary" sx={{ fontSize: 15 }} />{" "}
+                  Accelerated download
+                </span>
+                <br />
+                <span className="font-thin mb-4 text-sm">
+                  <CheckCircleIcon color="primary" sx={{ fontSize: 15 }} />{" "}
+                  Largest driver database
+                </span>
               </div>
-              
+
               <p className="text-xs font-bold">Save time and manual effort</p>
 
-<div className="desbtn">
-<button className="btn btn-light bg-green-700 mx-2 px-3 " onClick={updatedrive} >Update</button>
-<button className="btn btn-light bg-gray-400  px-3 " > Register Now</button>
-
-</div>
-
-
+              <div className="desbtn">
+                <button
+                  className="btn btn-light bg-green-700 mx-2 px-3 "
+                  onClick={updatedrive}
+                >
+                  Update
+                </button>
+                <button className="btn btn-light bg-gray-400  px-3 ">
+                  {" "}
+                  Register Now
+                </button>
+              </div>
             </div>
           </div>
-         
         </div>
       )}
       {exclusionStatus && (
@@ -532,7 +486,8 @@ console.log("total outdated drivers are ==",c)
                 <img src={Danger} alt="File Explorer" className="boxicons" />
                 <div className="popdata">
                   <h4 className="font-extrabold">
-                  {comparisonResult.filter(driver => driver.DriverStatus === "Outdated").length} Outdated Drivers Found !
+                   
+                   {count}  Outdated Drivers Found !
                   </h4>
                   <p className="font-medium text-xs mt-1">
                     To update outdated drivers clickon Purchase Now button.
@@ -619,113 +574,157 @@ console.log("total outdated drivers are ==",c)
           </div>
         </div>
       )}
-{show && (
+      {show && (
         <div className="exclusion-main1">
           <div className="container-darfrag testing-class ">
             <div className="">
-              <div className="lastScreenResultSecond2  ml-10">                
+              <div className="lastScreenResultSecond2  ml-10">
                 <span className="text-lg font-bold">
-                Updating the outdated drivers may increase the system speed
-                </span>             
-              <p className="text-xs font-normal font-sans">Advance Driver Updater's benefits can include faster performance,increased startup speed,<br/> and fewer issue
-                message when regularly used</p>
-              </div>           
-            </div>        
-            <div className="StartScan flex justify-content-between againedit">
-            <table class="table table-bordered">
-              <thead>
-                <th scope="col" className="pl-14">
-                Total Outdated Drivers
-                </th>
-                <th scope="col" className="pl-52">
-                Status
-                </th>
-              </thead>
-              <tbody>
-                <th scope="row" className="pl-14">2 Outdated drivers</th>
-                <th className="pl-52">Out-Dated</th>
-              </tbody>
-              </table>                      
+                  Updating the outdated drivers may increase the system speed
+                </span>
+                <p className="text-xs font-normal font-sans">
+                  Advance Driver Updater's benefits can include faster
+                  performance,increased startup speed,
+                  <br /> and fewer issue message when regularly used
+                </p>
+              </div>
             </div>
-<span className="text-xs pl-32">To update the remaining outdated drivers click <a className="underline">Purchase now</a> </span>
+            <div className="StartScan flex justify-content-between againedit">
+              <table class="table table-bordered">
+                <thead>
+                  <th scope="col" className="pl-14">
+                    Total Outdated Drivers
+                  </th>
+                  <th scope="col" className="pl-52">
+                    Status
+                  </th>
+                </thead>
+                <tbody>
+                  <th scope="row" className="pl-14">
+                    2 Outdated drivers
+                  </th>
+                  <th className="pl-52">Out-Dated</th>
+                </tbody>
+              </table>
+            </div>
+            <span className="text-xs pl-32">
+              To update the remaining outdated drivers click{" "}
+              <a className="underline">Purchase now</a>{" "}
+            </span>
             <div className="footer2 bottom-0">
-            <div className="row">
-              <div className="flex justify-content-between ">
-                <div className="flex">
-                  <img src={Logo} alt="Logo" className="box-icon112" />
-                  <span className="  text-xs font-medium text-black ml-1 mt-2.5">
-                    <span className="font-bold text-sm"> Improve performance, or your money back</span>
-                    <br />
-                    <span className="font-medium">Rest assured, If you are not completely happy with the product, contact us within 60 days of your purchase and we will refund your money. </span>
-                  </span>
+              <div className="row">
+                <div className="flex justify-content-between ">
+                  <div className="flex">
+                    <img src={Logo} alt="Logo" className="box-icon112" />
+                    <span className="  text-xs font-medium text-black ml-1 mt-2.5">
+                      <span className="font-bold text-sm">
+                        {" "}
+                        Improve performance, or your money back
+                      </span>
+                      <br />
+                      <span className="font-medium">
+                        Rest assured, If you are not completely happy with the
+                        product, contact us within 60 days of your purchase and
+                        we will refund your money.{" "}
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          </div>
-          <div id="pagescanbottomscan" className="fixed-bottom   flex justify-content-end bg-gray-100">
-            <button className="btn btn-light designbtn1 border-black text-black" >
+          <div
+            id="pagescanbottomscan"
+            className="fixed-bottom   flex justify-content-end bg-gray-100"
+          >
+            <button className="btn btn-light designbtn1 border-black text-black">
               View outdated driver
             </button>
-            <a className="btn btn-light designbtn1 mr-2 border-black bg-yellow-700 text-white" href="https://cleanersite.netlify.app/checkout">purchase Now </a>
+            <a
+              className="btn btn-light designbtn1 mr-2 border-black bg-yellow-700 text-white"
+              href="https://cleanersite.netlify.app/checkout"
+            >
+              purchase Now{" "}
+            </a>
           </div>
         </div>
       )}
-{/* for update popup  */}
-{showdriver && (
+      {/* for update popup  */}
+      {showdriver && (
         <div id="" className="exclusion-maintesting">
           <div className="upedit">
-               <h1 style={{ marginLeft: "10px" }} className="font-extrabold pt-2">
-                 <b className="text-white">Update all your drivers in minutes</b>
-                </h1>
-                <div onClick={(e) => setShowdriver(false)}>
-                  <span className="closeagain "></span>
-                  </div>   
-          </div>             
-     <div className="minenewpop">
-     <div className="flex place-content-evenly mt-2 text-xs pt-2">
-   
-     <span className=""> Device Name : {deviceName}</span>      
-     </div>
-     <div className="StartScan flex justify-content-between">
-      
-        <div>
-          <div className="progress11">
-            <div className="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style={{ width: `${percentage}%` }}
-              aria-valuenow={percentage} >          
-              <span>{percentage.toFixed()}%</span> 
+            <h1 style={{ marginLeft: "10px" }} className="font-extrabold pt-2">
+              <b className="text-white">Update all your drivers in minutes</b>
+            </h1>
+            <div onClick={(e) => setShowdriver(false)}>
+              <span className="closeagain "></span>
             </div>
           </div>
+          <div className="minenewpop">
+            <div className="flex place-content-evenly mt-2 text-xs pt-2">
+              <span className=""> Device Name : {deviceName}</span>
+            </div>
+            <div className="StartScan flex justify-content-between">
+              <div>
+                <div className="progress11">
+                  <div
+                    className="progress-bar bg-primary"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    style={{ width: `${percentage}%` }}
+                    aria-valuenow={percentage}
+                  >
+                    <span>{percentage.toFixed()}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            id="pagescanbottomscanagain"
+            className="fixed-bottom   flex justify-content-end bg-gray-100"
+          >
+            <a
+              className="btn btn-light designbtn10 mr-2 border-black bg-green-700 text-white px-3"
+              href=""
+              onClick={(e) => setShowdriver(false)}
+            >
+              Ok{" "}
+            </a>
+          </div>
         </div>
-      </div>
-     </div>
-     <div id="pagescanbottomscanagain" className="fixed-bottom   flex justify-content-end bg-gray-100">
-     <a className="btn btn-light designbtn10 mr-2 border-black bg-green-700 text-white px-3" href="" onClick={(e)=>setShowdriver(false)}>Ok </a>
-     </div>
-     </div>
- )}
-{updatesuccessful && (
-   <div className="exclusion-maintesting22">
-   <div className="upedit22">
-        <h1 style={{ marginLeft: "10px" }} className="font-extrabold pt-2">
-          <b className="text-white">Update drivers has been updated</b>
-         </h1>
-         
-   </div>             
-<div className="minenewpop ml-8 mt-4">
-<div className=" place-content-evenly mt-2 text-xs pt-2">
-<h1 className="font-bold text-black text-xs">SUCCESSFULL!!!</h1><br/>
-<span className=" text-black text-xs"> 
-You are now getting maximum benifit from the device
-</span>      
-</div>
-
-</div>
-<div id="pagescanbottomscanagain22" className="fixed-bottom   flex justify-content-end bg-gray-100">
-<a className="btn btn-light designbtn100 mr-2 border-black bg-green-700 text-white px-3" href="" onClick={(e) => setupdatesuccessful(false)}>Ok </a>
-</div>
-</div>
-)}
+      )}
+      {updatesuccessful && (
+        <div className="exclusion-maintesting22">
+          <div className="upedit22">
+            <h1 style={{ marginLeft: "10px" }} className="font-extrabold pt-2">
+              <b className="text-white">Update drivers has been updated</b>
+            </h1>
+          </div>
+          <div className="minenewpop ml-8 mt-4">
+            <div className=" place-content-evenly mt-2 text-xs pt-2">
+              <h1 className="font-bold text-black text-xs">SUCCESSFULL!!!</h1>
+              <br />
+              <span className=" text-black text-xs">
+                You are now getting maximum benifit from the device
+              </span>
+            </div>
+          </div>
+          <div
+            id="pagescanbottomscanagain22"
+            className="fixed-bottom   flex justify-content-end bg-gray-100"
+          >
+            <a
+              className="btn btn-light designbtn100 mr-2 border-black bg-green-700 text-white px-3"
+              href=""
+              onClick={(e) => setupdatesuccessful(false)}
+            >
+              Ok{" "}
+            </a>
+          </div>
+        </div>
+      )}
     </>
   ) : (
     <Setting value="Scan" />

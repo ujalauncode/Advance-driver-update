@@ -37,10 +37,10 @@ export default function StartScan({ value = 0 }) {
   const handleRedirect = (status, delay) => {
     setTimeout(() => {
       setCleanerStatus(status);
-      Tauri.invoke("tauri", "open", {
-        uri: "scan-registry",
-        webviewId: "webview",
-      });
+      // invoke("tauri", "open", {
+      //   uri: "scan-registry",
+      //   webviewId: "webview",
+      // });
       alert("Redirecting to another page and im getting display to uuuu!");
     }, delay);
   };

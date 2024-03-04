@@ -140,15 +140,14 @@ let memory_info_str = String::from_utf8_lossy(&memory_info)
     .trim()
     .to_string();
 
-// Convert memory info from bytes to gigabytes
-let memory_info_gb = match memory_info_str.parse::<u64>() {
-    Ok(bytes) => bytes / (1024 * 1024 * 1024), // Convert bytes to gigabytes
-    Err(_) => 0, // Handle parse errors gracefully
+
+let memory_info_gb = match memory_info_str.parse::<f64>() {
+    Ok(bytes) => bytes / (1024.0 * 1024.0 * 1024.0), // Convert bytes to gigabytes
+    Err(_) => 0.0, // Handle parse errors gracefully
 };
 
-// Round up the memory size to the nearest whole number of gigabytes
-let rounded_memory_size_gb: u64 = (memory_info_gb as f64).ceil() as u64;
-  
+let rounded_memory_size_gb: u64 = memory_info_gb.ceil() as u64;
+
     SystemInfo {
         os_info: os_info_str,
         cpu_info: cpu_info_str,
@@ -163,73 +162,46 @@ let rounded_memory_size_gb: u64 = (memory_info_gb as f64).ceil() as u64;
 
 
 
-#[tauri::command]
-fn __cmd__checkagain() -> String {
-    use std::process::Command;
-    let _ = Command::new("powershell")
-        .args(&["-Command", "Install-Module -Name PSWindowsUpdate -Force -AllowClobber"])
-        .output()
-        .expect("Failed to execute PowerShell command to install module");
-    let _ = Command::new("powershell")
-        .args(&["-Command", "Import-Module PSWindowsUpdate"])
-        .output()
-        .expect("Failed to execute PowerShell command to import module");
+// #[tauri::command]
+// fn __cmd__checkagain() -> String {
+//     use std::process::Command;
+//     let _ = Command::new("powershell")
+//         .args(&["-Command", "Install-Module -Name PSWindowsUpdate -Force -AllowClobber"])
+//         .output()
+//         .expect("Failed to execute PowerShell command to install module");
+//     let _ = Command::new("powershell")
+//         .args(&["-Command", "Import-Module PSWindowsUpdate"])
+//         .output()
+//         .expect("Failed to execute PowerShell command to import module");
 
-    let check_updates_cmd = Command::new("powershell")
-        .args(&["-Command", "Get-WindowsUpdate -MicrosoftUpdate -Summary"])
-        .output();
+//     let check_updates_cmd = Command::new("powershell")
+//         .args(&["-Command", "Get-WindowsUpdate -MicrosoftUpdate -Summary"])
+//         .output();
 
-    match check_updates_cmd {
-        Ok(output) => {
-            let updates_output = String::from_utf8_lossy(&output.stdout);
+//     match check_updates_cmd {
+//         Ok(output) => {
+//             let updates_output = String::from_utf8_lossy(&output.stdout);
             
-            println!("Updates Output: {}", updates_output);
+//             println!("Updates Output: {}", updates_output);
 
-            if updates_output.contains("No Updates Found") {
-                "No updates are available.".to_string()
-            } else {
-                updates_output.to_string()
-            }
-        },
-        Err(error) => {
-            eprintln!("Error executing PowerShell command: {:?}", error);
-            "Error executing PowerShell command.".to_string()
-        }
-    }
-}
+//             if updates_output.contains("No Updates Found") {
+//                 "No updates are available.".to_string()
+//             } else {
+//                 updates_output.to_string()
+//             }
+//         },
+//         Err(error) => {
+//             eprintln!("Error executing PowerShell command: {:?}", error);
+//             "Error executing PowerShell command.".to_string()
+//         }
+//     }
+// }
 
-// use std::process::Command;
 
-#[tauri::command]
-fn __cmd__checkupdate() -> String {
-    use std::process::Command;
-
-    // Execute PowerShell command to install Windows updates
-    let install_updates_cmd = Command::new("powershell")
-        .args(&["-Command", "Install-WindowsUpdate"])
-        .output();
-
-    match install_updates_cmd {
-        Ok(output) => {
-            // Check if the command executed successfully
-            if output.status.success() {
-                return "Windows updates installed successfully.".to_string();
-            } else {
-                // If the command failed, print the error message
-                let error_message = String::from_utf8_lossy(&output.stderr);
-                return format!("Error installing Windows updates: {}", error_message);
-            }
-        }
-        Err(err) => {
-            // Handle the error if the command couldn't be executed
-            return format!("Error executing PowerShell command: {}", err);
-        }
-    }
-}
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, mine_driver, __cmd__testing,__cmd__checkagain,__cmd__checkupdate])
+        .invoke_handler(tauri::generate_handler![greet, mine_driver, __cmd__testing])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

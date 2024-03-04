@@ -30,7 +30,6 @@ function Status() {
   const buttonRef = useRef(null);
 
   useEffect(() => {
-    // Function to start the scan automatically
     const startScanAutomatically = () => {
       if (buttonRef.current) {
         buttonRef.current.click();
@@ -39,18 +38,15 @@ function Status() {
     startScanAutomatically();
   }, []);
 
-  const handleStartScan = () => {
+const handleStartScan = () => {
     setCleanerStart("scan-registry");
   };
-
 
 useEffect(() => {
   const fetchDrivers = async () => {
     try {
       const res = await axios.get('http://localhost:3000/outdatedDrivers');
-     const a =res.data
-      console.log("this is outdated drivers",a)
-     
+     const a =res.data     
     } catch (error) {
       console.error('Error:', error);
      
@@ -58,25 +54,6 @@ useEffect(() => {
   };
   fetchDrivers();
 }, []);
-
-  // useEffect(() => {
-  //   async function fetchBackupDates() {
-  //     try {
-  //       const response = await axios.get("http://localhost:3000/backupdate");
-  //       setLatestBackupDates(response.data.sortedData);
-  //     } catch (error) {
-  //       setError("Error fetching backup dates: " + error.message);
-  //     }
-  //   }
-  //   fetchBackupDates();
-  // }, []);
-
-  // const getLatestDate = () => {
-  //   if (latestBackupDates > 0) {
-  //     return latestBackupDates[0].backupDate;
-  //   }
-  //   return "No backup dates available";
-  // };
 
   useEffect(() => {
     const fetchDataAndStoreOutdatedDrivers = async () => {
@@ -126,15 +103,12 @@ useEffect(() => {
     const fetchSystemInfo = async () => {
       try {
         const response = await invoke("__cmd__testing");
-        console.log(response);
-        console.log(response.disk_info);
         const diskInfoGB = Array.isArray(response.disk_info)
           ? response.disk_info.map((size) => `${size} GB`)
           : [];
         const memoryInfoGB = Array.isArray(response.memory_info)
           ? response.memory_info.map((size) => `${size} GB`)
           : [];
-          console.log("memoryInfoGB =",memoryInfoGB)
         const a = {
           cpu_info: response.cpu_info,
           os_info: response.os_info,
@@ -188,7 +162,7 @@ useEffect(() => {
       } catch (error) {
         setError('Error fetching latest backup date');
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     }
 
@@ -235,7 +209,7 @@ useEffect(() => {
                   </h6>
                   <h5 className="font-semibold text-base font-sans mt-2">
                     Outdated
-                    <i class="fa-solid fa-circle-info recom-i mx-1 text-black"></i>
+                    <i className="fa-solid fa-circle-info recom-i mx-1 text-black"></i>
                   </h5>
                 </div>
               </div>
@@ -246,7 +220,7 @@ useEffect(() => {
                 performance of your PC !
               </h4>
               <button
-                class="button-scan mt-3 ml-16"
+                className="button-scan mt-3 ml-16"
                 role="button"
                 onClick={(e) => setCleanerStart("scan-registry")}
               >

@@ -24,9 +24,7 @@ export default function Setting({value}) {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime(getCurrentTime);
-    }, 60000); // Update every minute
-
-    // Cleanup the interval when the component unmounts
+    }, 60000); 
     return () => clearInterval(intervalId);
   }, []);
 
@@ -81,16 +79,10 @@ export default function Setting({value}) {
                                 <span className="fa-solid fa-ellipsis-vertical text-xl font-xs designset " onClick={handleButtonClick}>
                                   {/* <MoreVertIcon className="" /> */}</span>
                                </label>
-                    <input type="file" id="fileInput" name="photo" ref={fileInputRef} onChange={handleFileChange} style={{ display: "none", visibility: "hidden" }}  required />                  
+                    <input type="file" directory="" webkitdirectory="" id="fileInput" name="photo" ref={fileInputRef} onChange={handleFileChange} style={{ display: "none", visibility: "hidden" }}  required />                  
                    </div>                      
                            </div>
-                           {/* <div className='col-lg-10'>
-                               <p style={{marginTop: '62px' , fontSize: '1.05rem'}}>Save all the downloaded drivers to the following location : </p>
-                               <div className='Divider-2'>
-   
-                               </div>
-   
-                           </div> */}
+                   
                            </div>
                            <div className='Header' >
                               Select location to save backups copies of original drivers
@@ -103,7 +95,7 @@ export default function Setting({value}) {
                                 <label htmlFor="photo" className="plus-button mt-4">
                                 <span className="fa-solid fa-ellipsis-vertical text-xl font-xs designset " onClick={handleButtonClick}></span>
                                </label>
-                    <input type="file" id="fileInput" name="photo" ref={fileInputRef} onChange={handleFileChange} style={{ display: "none", visibility: "hidden" }}  required/>
+                    <input type="file" directory="" webkitdirectory="" id="fileInput" name="photo" ref={fileInputRef} onChange={handleFileChange} style={{ display: "none", visibility: "hidden" }}  required/>
                    </div>
 
                            </div>
