@@ -2,8 +2,24 @@ import React from 'react'
 import GridViewIcon from '@mui/icons-material/GridView';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import settinglogo1 from "../Image/settinglogo1.png"
+import MinimizeIcon from '@mui/icons-material/Minimize';
+import CloseIcon from '@mui/icons-material/Close';
+import { invoke } from '@tauri-apps/api/tauri';
+
 
 export default function Navbar() {
+  const closeWindow = () => {
+  
+    window.open('', '_self', '');
+    window.close();
+  };
+  const minimizeApp = async () => {
+    try {
+      await invoke('window.minimize');
+    } catch (error) {
+      console.error('Error minimizing window:', error);
+    }
+  };
   return (
     <>
  <div className="container-fluid">
@@ -19,6 +35,9 @@ export default function Navbar() {
     <div className='mr-5'>
       <GridViewIcon fontSize="medium" className="nav-icon" />
       <BusinessCenterIcon fontSize="medium" className="nav-icon" />
+      <MinimizeIcon  fontSize="large" className="nav-icon1" onClick={minimizeApp}/>
+      <CloseIcon  fontSize="small" color="secondary"  className="nav-icon11" onClick = {closeWindow} />
+
     </div>
 
     

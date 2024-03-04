@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "Advance Driver Update",
+    "productName": "demo",
     "version": "0.0.0"
   },
   "tauri": {  
@@ -26,7 +26,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.Advance Driver Update.dev",
+      "identifier": "com.demo.dev",
       "icon": [
        
       ]
@@ -39,9 +39,10 @@
         "decorations": false,
         "fullscreen": false,
         "resizable": false,
-        "title": "Advance Driver Update",
+        "title": "demo",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "minimizable": true
         
       }
     ]    
