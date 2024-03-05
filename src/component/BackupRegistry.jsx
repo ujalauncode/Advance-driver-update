@@ -242,7 +242,7 @@ export default function BackupRegistry() {
             style={{ marginLeft: "54px", marginTop: "12px" }}
             className="font-extrabold"
           >
-            <b>backup all your drivers in minutes</b>
+            <b>uninstall update of  all updated drivers in minutes</b>
           </h1>
           <div onClick={(e) => setHide(false)}>
             <span className="close"></span>

@@ -95,17 +95,8 @@ const Buy = () => {
                    
                   </a>{" "}
                 </div>
-                {/* <div class="norton-logo"> <a href="javascript:void(0)"> <img src="https://cdn.systweak.com/website/rightbackup/images/norton-secured-logo.png" onclick="openNorton();" width="176" height="94" alt="Norton Secured" title="Norton Secured" /></a> </div> */}
               </div>
-              {/* <div className="money-back-logo middel-space03">
-                <img
-                  src="https://cdn.systweak.com/website/rightbackup/images/money-back-logo.jpg"
-                  width={163}
-                  height={163}
-                  alt="Money Back Gaurantee"
-                  title="Money Back Gaurantee"
-                />
-              </div> */}
+              
             </aside>
             <article className="right-bar">
               <div className="act-col">
