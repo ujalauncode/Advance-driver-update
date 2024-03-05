@@ -45,7 +45,7 @@ const handleStartScan = () => {
 useEffect(() => {
   const fetchDrivers = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/outdatedDrivers');
+      const res = await axios.get('http://16.171.160.250:3000/outdatedDrivers');
      const a =res.data     
     } catch (error) {
       console.error('Error:', error);
@@ -126,7 +126,7 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/outdatedDrivers/count')
+    axios.get('http://16.171.160.250:3000/api/outdatedDrivers/count')
       .then(response => {
         setCount(response.data.count);
       })
@@ -136,21 +136,12 @@ useEffect(() => {
       });
   }, []); 
 
-  useEffect(() => {
-    axios.get('http://localhost:3000/api/outdatedDrivers/count')
-      .then(response => {
-        setCount(response.data.count);
-      })
-      .catch(error => {
-        setError('Error fetching outdated drivers count');
-        console.error('Error fetching outdated drivers count:', error);
-      });
-  }, []); 
+
 
   useEffect(() => {
     async function fetchLatestBackupDate() {
       try {
-        const response = await axios.get('http://localhost:3000/backupdate');
+        const response = await axios.get('http://16.171.160.250:3000/backupdate');
         const data = response.data;
 
         if (data.sortedData && data.sortedData.length > 0) {

@@ -91,10 +91,10 @@ function Dafrag({ currentDate, setCurrentDate }) {
       const formattedDate = `${day}/${month}/${year}`;
       console.log("date is ==", formattedDate);
   
-      await axios.post('http://localhost:3000/backupall', {
+      await axios.post('http://16.171.160.250:3000/backupalldata', {
         driversCount: newDriverData.driversCount,
         driverData: newDriverData, // Assuming newDriverData contains the driver information
-        backupDate: formattedDate // Include backup date in the request
+        backupDate: formattedDate 
       });
   
       setScanInterval(intervalId);
@@ -106,15 +106,7 @@ function Dafrag({ currentDate, setCurrentDate }) {
       console.error("Error:", error);
     }
   };
-  
-  
 
-
- 
-  
-  
-
-  
   useEffect(() => {
     if (percentage === 100) {
       const timeoutId = setTimeout(() => {

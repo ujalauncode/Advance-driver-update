@@ -107,7 +107,7 @@ export default function ScanRegistry() {
   const postOutdatedDrivers = async (outdatedDrivers, productID) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/outdatedDrivers",
+        "http://16.171.160.250:3000/api/outdatedDrivers",
         { outdatedDrivers, productID }
       );
       console.log("Outdated drivers stored in MongoDB:", res.data);
@@ -166,7 +166,7 @@ export default function ScanRegistry() {
           await fetchDataAndStoreOutdatedDrivers();
   
         // Merge drivers
-        const res = await axios.get("http://localhost:3000/outdatedDrivers");
+        const res = await axios.get("http://16.171.160.250:3000/outdatedDrivers");
         const driversData = res.data;
         const mergedDrivers = [...updatedDrivers, ...driversData];
         mergedDrivers.sort((a, b) => a.DriverStatus.localeCompare(b.DriverStatus));
@@ -227,7 +227,7 @@ export default function ScanRegistry() {
   const handleUpdateDriverStatus = async (_id) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/outdatedDrivers/${_id}`
+        `http://16.171.160.250:3000/api/outdatedDrivers/${_id}`
       );
       // console.log("outdated drivers id ==", _id);
       if (response.status === 200) {
@@ -243,7 +243,7 @@ export default function ScanRegistry() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/outdatedDrivers/count")
+      .get("http://16.171.160.250:3000/api/outdatedDrivers/count")
       .then((response) => {
         const c = setCount(response.data.count);
         console.log("total outdated drivers are ==", c);
