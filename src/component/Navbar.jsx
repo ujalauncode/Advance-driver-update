@@ -14,11 +14,7 @@ export default function Navbar() {
     window.close();
   };
   const minimizeApp = async () => {
-    try {
-      await invoke('window.minimize');
-    } catch (error) {
-      console.error('Error minimizing window:', error);
-    }
+    invoke('window', 'minimize');
   };
   return (
     <>
@@ -35,7 +31,7 @@ export default function Navbar() {
     <div className='mr-5'>
       <GridViewIcon fontSize="medium" className="nav-icon" />
       <BusinessCenterIcon fontSize="medium" className="nav-icon" />
-      {/* <MinimizeIcon  fontSize="large" className="nav-icon1" onClick={minimizeApp}/> */}
+      <MinimizeIcon  fontSize="large" className="nav-icon1" onClick={minimizeApp}/>
       <CloseIcon  fontSize="small" color="secondary"  className="nav-icon11" onClick = {closeWindow} />
 
     </div>

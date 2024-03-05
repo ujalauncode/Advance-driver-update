@@ -16,6 +16,7 @@ export default function StartScan({ value = 0 }) {
   const [initialInterval, setInitialScanInterval] = useState(null);
   const [redirectPath, setRedirectPath] = useState(null);
   const [driverInfo, setDriverInfo] = useState('');
+  const [alertShown, setAlertShown] = useState(false);
 
   let intervalId;
   // const invoke = window.__TAURI__.invoke
@@ -34,23 +35,28 @@ export default function StartScan({ value = 0 }) {
       clearInterval(scanInterval);
     }
   }, [isScanning, scanInterval]);
-  let alertShown = false; // Flag to track whether the alert has been shown
 
-  // const handleRedirect = (status, delay) => {
-  //   setTimeout(() => {
-  //     setCleanerStatus(status);
-  //     invoke("tauri", "open", {
-  //       uri: "scan-registry",
-  //       webviewId: "webview",
-  //     });
   
-  //     // Check if the alert has been shown before displaying it
-  //     if (!alertShown) {
-  //       alert("Redirecting to another page and I'm getting displayed to you!");
-  //       alertShown = true; // Set the flag to true to indicate that the alert has been shown
-  //     }
-  //   }, delay);
-  // };
+
+  const handleRedirect = (status, delay) => {
+      setTimeout(() => {
+          setCleanerStatus(status);
+          invoke("tauri", "open", {
+              uri: "scan-registry",
+              webviewId: "webview",
+          });
+          
+          // if (!alertShown) {
+          //     alertShown = true;
+          //     const confirmed = window.confirm("Redirecting to another page. Click OK to continue or Cancel to stay.");
+          //     if (!confirmed) {
+          //         // Handle cancellation, if needed
+          //     }
+          // }
+          
+      }, delay);
+  };
+  
   
 
   const fetchData = async () => {
@@ -64,7 +70,6 @@ export default function StartScan({ value = 0 }) {
       setCurrentIndexs(0);
       console.log("get driver route");
         const intervalId = setInterval(() => {
-        console.log("setInterval");
         if (isScanning) {
           setPercentage((prevPercentage) =>
             Math.min(prevPercentage + 100 / newDriverData.length, 100)
@@ -73,7 +78,7 @@ export default function StartScan({ value = 0 }) {
             if (currentIndexs >= newDriverData.length) {
             clearInterval(intervalId);
             setPercentage(100);
-            handleRedirect("scan-registry", 3000);
+            handleRedirect("scan-registry", 1000);
           }
         }
       },100);
