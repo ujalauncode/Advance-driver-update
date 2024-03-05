@@ -12,9 +12,10 @@
   "tauri": {  
    
     "allowlist": {
-      "all": false,
+      "all": true,
       "fs": {
-       
+       "renameFile": true,
+       "removeFile": true,
         "scope": ["$APP/*","$DOWNLOAD/*"]
       },
       "shell": {
@@ -39,7 +40,7 @@
         "decorations": false,
         "fullscreen": false,
         "resizable": false,
-        "title": "demo",
+        "title": "Advance Driver Update",
         "width": 800,
         "height": 600,
         "minimizable": true
