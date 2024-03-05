@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "demo",
+    "productName": "Advance Driver Update",
     "version": "0.0.0"
   },
   "tauri": {  

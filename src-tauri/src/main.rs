@@ -31,8 +31,7 @@ fn mine_driver() -> Result<String, String> {
     }
 }
 
-use tokio;
-use std::convert::TryInto;
+// use std::convert::TryInto;
 
 use mongodb::{Client, Collection};
 use serde::Serialize;
