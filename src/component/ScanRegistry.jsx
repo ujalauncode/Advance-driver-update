@@ -382,6 +382,7 @@ export default function ScanRegistry() {
           </div>
         </div>
         <div id="pagescanbottom" className="fixed-bottom ">
+          
           <button
             className="btn btn-light designbtn1 "
             onClick={(e) => setShow(true)}

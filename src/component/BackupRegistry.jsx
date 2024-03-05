@@ -63,7 +63,7 @@ export default function BackupRegistry() {
   useEffect(() => {
     const getdrivers = async () => {
       try {
-        const response = await axios.get("http://16.171.160.250:3000/backupall");
+        const response = await axios.get("http://16.171.160.250:3000/outdatedDrivers");
         const driverinfo = await response.data;
         console.log("my driver =", driverinfo);
         setmydriver(driverinfo);
@@ -253,10 +253,10 @@ export default function BackupRegistry() {
                 <img src={Danger} alt="File Explorer" className="boxicons" />
                 <div className="popdata">
                   <h4 className="font-extrabold">
-                    1 Drivers Selected For Backup!
+                    1 Drivers Selected For Uninstall Update!
                   </h4>
                   <p className="font-medium text-xs mt-1">
-                    To create backup of drivers click on Purchase Now button.
+                    To uninstall update of drivers click on Purchase Now button.
                   </p>
                 </div>
               </div>
@@ -264,11 +264,11 @@ export default function BackupRegistry() {
           </div>
           <h5
             style={{ marginLeft: "34px", marginTop: "22px" }}
-            className="text-sm"
+            className="text-xs"
           >
             Advanced Driver Updater can quickly and easily update these drivers
             to restore optimum
-            <br></br>performance to your PC
+            <br></br>performance to your PC.If you want to delete update may be your system can faced problems
           </h5>
           <div className="row flex justify-content-between mt-3 mb-4">
             <div className="col-3 ml-8">

@@ -34,17 +34,24 @@ export default function StartScan({ value = 0 }) {
       clearInterval(scanInterval);
     }
   }, [isScanning, scanInterval]);
-  const handleRedirect = (status, delay) => {
-    setTimeout(() => {
-      setCleanerStatus(status);
-      // invoke("tauri", "open", {
-      //   uri: "scan-registry",
-      //   webviewId: "webview",
-      // });
-      alert("Redirecting to another page and im getting display to uuuu!");
-    }, delay);
-  };
+  let alertShown = false; // Flag to track whether the alert has been shown
 
+  // const handleRedirect = (status, delay) => {
+  //   setTimeout(() => {
+  //     setCleanerStatus(status);
+  //     invoke("tauri", "open", {
+  //       uri: "scan-registry",
+  //       webviewId: "webview",
+  //     });
+  
+  //     // Check if the alert has been shown before displaying it
+  //     if (!alertShown) {
+  //       alert("Redirecting to another page and I'm getting displayed to you!");
+  //       alertShown = true; // Set the flag to true to indicate that the alert has been shown
+  //     }
+  //   }, delay);
+  // };
+  
 
   const fetchData = async () => {
     console.log("fetch data running");
