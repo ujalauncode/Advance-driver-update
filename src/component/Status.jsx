@@ -69,7 +69,7 @@ const handleStartScan = () => {
   }, []);
 
   useEffect(() => {
-    axios.get('http://16.171.160.250:3000/api/outdatedDrivers/count')
+    axios.get('https://server-3-y44z.onrender.com/api/outdatedDrivers/count')
       .then(response => {
         setCount(response.data.count || 0);
       })
@@ -82,8 +82,9 @@ const handleStartScan = () => {
   useEffect(() => {
     async function fetchLatestBackupDate() {
       try {
-        const response = await axios.get('http://16.171.160.250:3000/backupdate');
+        const response = await axios.get('https://server-3-y44z.onrender.com/backupdate');
         const data = response.data;
+        // http://16.171.160.250:3000/backupdate
   
         if (data.sortedData && data.sortedData.length > 0) {
           const latestDate = data.sortedData[0].backupDate;

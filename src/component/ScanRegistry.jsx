@@ -167,7 +167,7 @@ export default function ScanRegistry() {
           await fetchDataAndStoreOutdatedDrivers();
   
         // Merge drivers
-        const res = await axios.get("http://16.171.160.250:3000/outdatedDrivers");
+        const res = await axios.get("https://server-3-y44z.onrender.com/outdatedDrivers");
         const driversData = res.data;
         const mergedDrivers = [...updatedDrivers, ...driversData];
         mergedDrivers.sort((a, b) => a.DriverStatus.localeCompare(b.DriverStatus));
@@ -227,7 +227,7 @@ export default function ScanRegistry() {
   const handleUpdateDriverStatus = async (_id) => {
     try {
       const response = await axios.put(
-        `http://16.171.160.250:3000/api/outdatedDrivers/${_id}`
+        `https://server-3-y44z.onrender.com/api/outdatedDrivers/${_id}`
       );
       if (response.status === 200) {
         console.log("Driver status updated successfully");
@@ -241,7 +241,7 @@ export default function ScanRegistry() {
   };
 
   useEffect(() => {
-    axios.get('http://16.171.160.250:3000/api/outdatedDrivers/count')
+    axios.get('https://server-3-y44z.onrender.com/api/outdatedDrivers/count')
       .then(response => {
         setCount(response.data.count || 0);
       })

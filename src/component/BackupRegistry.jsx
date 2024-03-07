@@ -30,7 +30,7 @@ export default function BackupRegistry() {
     async function fetchBackupDates() {
       try {
         const response = await axios.get(
-          "http://16.171.160.250:3000/backupdate"
+          "https://server-3-y44z.onrender.com/backupdate"
         );
         setLatestBackupDates(response.data.sortedData);
       } catch (error) {
@@ -43,7 +43,7 @@ export default function BackupRegistry() {
   const handleDelete = async (id) => {
     console.log("handle delete func id =", id);
     try {
-      await axios.delete(`http://16.171.160.250:3000/backupdate/${id}`);
+      await axios.delete(`https://server-3-y44z.onrender.com/backupdate/${id}`);
 
       let filterArray = latestBackupDates.filter((date) => date._id !== id);
       console.log(filterArray);
@@ -63,7 +63,7 @@ export default function BackupRegistry() {
   useEffect(() => {
     const getdrivers = async () => {
       try {
-        const response = await axios.get("http://16.171.160.250:3000/outdatedDrivers");
+        const response = await axios.get("https://server-3-y44z.onrender.com/outdatedDrivers");
         const driverinfo = await response.data;
         console.log("my driver =", driverinfo);
         setmydriver(driverinfo);
