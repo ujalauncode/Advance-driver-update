@@ -42,62 +42,62 @@ const handleStartScan = () => {
     setCleanerStart("scan-registry");
   };
 
-useEffect(() => {
-  const fetchDrivers = async () => {
-    try {
-      const res = await axios.get('http://16.171.160.250:3000/outdatedDrivers');
-     const a =res.data     
-    } catch (error) {
-      console.error('Error:', error);
+// useEffect(() => {
+//   const fetchDrivers = async () => {
+//     try {
+//       const res = await axios.get('http://16.171.160.250:3000/outdatedDrivers');
+//      const a =res.data     
+//     } catch (error) {
+//       console.error('Error:', error);
      
-    }
-  };
-  fetchDrivers();
-}, []);
+//     }
+//   };
+//   fetchDrivers();
+// }, []);
 
-  useEffect(() => {
-    const fetchDataAndStoreOutdatedDrivers = async () => {
-      try {
-        const response = await invoke("mine_driver");
-        const driverinfo = JSON.parse(response);
+  // useEffect(() => {
+  //   const fetchDataAndStoreOutdatedDrivers = async () => {
+  //     try {
+  //       const response = await invoke("mine_driver");
+  //       const driverinfo = JSON.parse(response);
 
-        const outdatedDriverNumbers = [
-          20, 26, 32, 28, 37, 27, 40, 22, 18, 16, 24, 39, 13, 12, 38,
-        ];
+  //       const outdatedDriverNumbers = [
+  //         20, 26, 32, 28, 37, 27, 40, 22, 18, 16, 24, 39, 13, 12, 38,
+  //       ];
 
-        let outdatedDrivers = [];
-        let updatedDrivers = [];
+  //       let outdatedDrivers = [];
+  //       let updatedDrivers = [];
 
-        driverinfo.forEach((driver, index) => {
-          if (outdatedDriverNumbers.includes(index + 1)) {
-            outdatedDrivers.push({
-              ...driver,
-              DriverStatus: "Outdated",
-              StatusColor: "#EB9C35",
-              StatusIcon: <ErrorIcon style={{ fontSize: "small" }} />,
-              StatusTextWeight: "bolder",
-            });
-          } else {
-            updatedDrivers.push({
-              ...driver,
-              DriverStatus: "Up to date",
-              StatusColor: "#0C6B37",
-              StatusIcon: <CheckIcon style={{ fontSize: "small" }} />,
-              StatusTextWeight: "normal",
-            });
-          }
-        });
+  //       driverinfo.forEach((driver, index) => {
+  //         if (outdatedDriverNumbers.includes(index + 1)) {
+  //           outdatedDrivers.push({
+  //             ...driver,
+  //             DriverStatus: "Outdated",
+  //             StatusColor: "#EB9C35",
+  //             StatusIcon: <ErrorIcon style={{ fontSize: "small" }} />,
+  //             StatusTextWeight: "bolder",
+  //           });
+  //         } else {
+  //           updatedDrivers.push({
+  //             ...driver,
+  //             DriverStatus: "Up to date",
+  //             StatusColor: "#0C6B37",
+  //             StatusIcon: <CheckIcon style={{ fontSize: "small" }} />,
+  //             StatusTextWeight: "normal",
+  //           });
+  //         }
+  //       });
 
-        const updatedDriverInfo = [...outdatedDrivers, ...updatedDrivers];
-        setSystemInformation(updatedDriverInfo);
-        setOutdatedDriverCount(outdatedDrivers.length);
-      } catch (error) {
-        console.error("Error fetching and storing driver information:", error);
-      }
-    };
+  //       const updatedDriverInfo = [...outdatedDrivers, ...updatedDrivers];
+  //       setSystemInformation(updatedDriverInfo);
+  //       setOutdatedDriverCount(outdatedDrivers.length);
+  //     } catch (error) {
+  //       console.error("Error fetching and storing driver information:", error);
+  //     }
+  //   };
 
-    fetchDataAndStoreOutdatedDrivers();
-  }, []);
+  //   fetchDataAndStoreOutdatedDrivers();
+  // }, []);
 
   useEffect(() => {
     const fetchSystemInfo = async () => {
@@ -128,13 +128,14 @@ useEffect(() => {
   useEffect(() => {
     axios.get('http://16.171.160.250:3000/api/outdatedDrivers/count')
       .then(response => {
-        setCount(response.data.count);
+        setCount(response.data.count || 0);
       })
       .catch(error => {
-        setError('Error fetching outdated drivers count');
         console.error('Error fetching outdated drivers count:', error);
+        setCount(0);
       });
-  }, []); 
+  }, []);
+  
 
 
 
@@ -143,12 +144,12 @@ useEffect(() => {
       try {
         const response = await axios.get('http://16.171.160.250:3000/backupdate');
         const data = response.data;
-
+  
         if (data.sortedData && data.sortedData.length > 0) {
           const latestDate = data.sortedData[0].backupDate;
           setLatestBackupDate(latestDate);
         } else {
-          setError('No backup dates found in the database');
+          setLatestBackupDate('No backup done yet');
         }
       } catch (error) {
         setError('Error fetching latest backup date');
@@ -156,9 +157,10 @@ useEffect(() => {
         // setLoading(false);
       }
     }
-
+  
     fetchLatestBackupDate();
   }, []);
+  
 
 
   return cleanerStart === "status" ? (
@@ -180,7 +182,7 @@ useEffect(() => {
                     </h3>
                   )}
                     <h6 className="text-xs font-medium">
-                    Last Scan : {latestBackupDate ? latestBackupDate : "No backup done yet"}
+                    Last Scan : {latestBackupDate}
                     </h6>
 
                     <h6 className="text-xs font-medium ">
@@ -227,9 +229,7 @@ useEffect(() => {
               <span className="font-bold text-xs text-black designpid">{systemInfo.product_id}</span>
             )}
           </div>
-          {error ? (
-            <p>Error fetching system information: {error}</p>
-          ) : (
+          
             <div>
               {systemInfo && (
                 <div className="left2">
@@ -272,9 +272,7 @@ useEffect(() => {
                       </li>
                     </div>
                     <div className="flex mt-2">
-                      {/* <WindowIcon color="primary" className="box-icon " /> */}
                       <img src={graph} alt=""  className="box-icon "/>
-
                       <li className="text-black ">
                         <h6 className="text-xs">Graphics</h6>{" "}
                         <h5 className="text-sm font-semibold font-sans">
@@ -286,7 +284,7 @@ useEffect(() => {
                 </div>
               )}
             </div>
-          )}
+         
         </div>
       </div>
     </>
