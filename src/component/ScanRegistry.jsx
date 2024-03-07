@@ -39,6 +39,7 @@ export default function ScanRegistry() {
   const [updatesuccessful, setupdatesuccessful] = useState();
   const [deviceName, setDeviceName] = useState();
   const [count, setCount] = useState(null);
+  const [error, setError]=useState()
 
 
   useEffect(() => {

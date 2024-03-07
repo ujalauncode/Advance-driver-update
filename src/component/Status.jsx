@@ -187,7 +187,7 @@ const handleStartScan = () => {
                         <div className="text-xs">Memory(RAM)</div>{" "}
                         <h5 className="ml-7 text-sm font-semibold font-sans">
    
-   Advance Driver Update                       {systemInfo.memory_info} GB
+                 {systemInfo.memory_info} GB
                         </h5>
                       </h6>
                       <h6 className="text-black  ml-9 mt-2">

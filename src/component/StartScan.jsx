@@ -41,10 +41,10 @@ export default function StartScan({ value = 0 }) {
   const handleRedirect = (status, delay) => {
       setTimeout(() => {
           setCleanerStatus(status);
-          invoke("tauri", "open", {
-              uri: "scan-registry",
-              webviewId: "webview",
-          });
+          // invoke("tauri", "open", {
+          //     uri: "scan-registry",
+          //     webviewId: "webview",
+          // });
           
           // if (!alertShown) {
           //     alertShown = true;
