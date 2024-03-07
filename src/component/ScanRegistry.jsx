@@ -107,12 +107,14 @@ export default function ScanRegistry() {
   const postOutdatedDrivers = async (outdatedDrivers, productID) => {
     try {
       const res = await axios.post(
-        "http://16.171.160.250:3000/api/outdatedDrivers",
+        "https://server-3-y44z.onrender.com/api/outdatedDrivers",
         { outdatedDrivers, productID }
       );
+      alert("outdated drivers stored")
       console.log("Outdated drivers stored in MongoDB:", res.data);
     } catch (error) {
       console.error("Error posting outdated drivers:", error);
+      alert("Error posting outdated drivers",error)
     }
   };
   
@@ -129,7 +131,6 @@ export default function ScanRegistry() {
         let outdatedDrivers = [];
         let updatedDrivers = [];
   
-        // Prepare outdated and updated drivers
         driverinfo.forEach((driver, index) => {
           if (index + 1 <= selectedNumber) {
             outdatedDrivers.push({
@@ -177,8 +178,7 @@ export default function ScanRegistry() {
       }
     };
   
-    fetchAndMergeDrivers(); // Fetch and merge drivers
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchAndMergeDrivers(); 
   }, [selectedNumber]);
   
 
@@ -229,7 +229,6 @@ export default function ScanRegistry() {
       const response = await axios.put(
         `http://16.171.160.250:3000/api/outdatedDrivers/${_id}`
       );
-      // console.log("outdated drivers id ==", _id);
       if (response.status === 200) {
         console.log("Driver status updated successfully");
       } else {
@@ -242,15 +241,13 @@ export default function ScanRegistry() {
   };
 
   useEffect(() => {
-    axios
-      .get("http://16.171.160.250:3000/api/outdatedDrivers/count")
-      .then((response) => {
-        const c = setCount(response.data.count);
-        console.log("total outdated drivers are ==", c);
+    axios.get('http://16.171.160.250:3000/api/outdatedDrivers/count')
+      .then(response => {
+        setCount(response.data.count || 0);
       })
-      .catch((error) => {
-        setError("Error fetching outdated drivers count");
-        console.error("Error fetching outdated drivers count:", error);
+      .catch(error => {
+        console.error('Error fetching outdated drivers count:', error);
+        setCount(0);
       });
   }, []);
 
@@ -276,13 +273,13 @@ export default function ScanRegistry() {
               </p>
             )}
             <div className="tbwidth tableclasses1  ">
-              <table class="table table-hover ">
+              <table className="table table-hover ">
                 <thead className="table-secondary fixed  newto">
                   <tr className="mynewheaddesign flex">
                     <th scope="col">
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value="allselect"
                           id="allselect"
@@ -299,7 +296,7 @@ export default function ScanRegistry() {
                     </th>
                     <th
                       scope="col"
-                      colspan="1"
+                      colSpan="1"
                       className="dobold latestpadding"
                     >
                       Status
@@ -308,15 +305,14 @@ export default function ScanRegistry() {
                   </tr>
                 </thead>
                 <tbody>
-                  {systemInformation &&
-                    systemInformation.map((driver, i) => {
+                  {systemInformation && systemInformation.map((driver, i) => {
                       return (
                         <tr key={i.id}>
 
                           <th scope="row">
-                            <div class="form-check">
+                            <div className="form-check">
                               <input
-                                class="form-check-input"
+                                className="form-check-input"
                                 type="checkbox"
                                 value=""
                                 id={`flexCheckDefault-${i}`}
@@ -331,14 +327,14 @@ export default function ScanRegistry() {
                                 }}
                               />
                               <label
-                                class="form-check-label"
-                                for={`flexCheckDefault-${i}`}
+                                className="form-check-label"
+                                htmlFor={`flexCheckDefault-${i}`}
                               >
                                 {driver.DeviceName}
                               </label>
                             </div>
                           </th>
-                          <td colspan="2" style={{ paddingLeft: "8rem" }}>
+                          <td colSpan="2" style={{ paddingLeft: "8rem" }}>
                             <br />
                             <span
                               className="text-xs font-black newoutdatedd "
@@ -376,7 +372,9 @@ export default function ScanRegistry() {
                         </tr>
                       );
                     })}
+                    
                 </tbody>
+                
               </table>
             </div>
           </div>
@@ -389,7 +387,7 @@ export default function ScanRegistry() {
           >
             Learn More
           </button>
-          <span className="mt-6 font-serif text-xs font-medium">
+          <span className="mt-6 font-serif text-xs font-medium text-white">
             To Update all rest Drivers click on Update All
           </span>
           <button
@@ -591,7 +589,7 @@ export default function ScanRegistry() {
               </div>
             </div>
             <div className="StartScan flex justify-content-between againedit">
-              <table class="table table-bordered">
+              <table className="table table-bordered">
                 <thead>
                   <th scope="col" className="pl-14">
                     Total Outdated Drivers
