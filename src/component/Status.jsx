@@ -42,63 +42,6 @@ const handleStartScan = () => {
     setCleanerStart("scan-registry");
   };
 
-// useEffect(() => {
-//   const fetchDrivers = async () => {
-//     try {
-//       const res = await axios.get('http://16.171.160.250:3000/outdatedDrivers');
-//      const a =res.data     
-//     } catch (error) {
-//       console.error('Error:', error);
-     
-//     }
-//   };
-//   fetchDrivers();
-// }, []);
-
-  // useEffect(() => {
-  //   const fetchDataAndStoreOutdatedDrivers = async () => {
-  //     try {
-  //       const response = await invoke("mine_driver");
-  //       const driverinfo = JSON.parse(response);
-
-  //       const outdatedDriverNumbers = [
-  //         20, 26, 32, 28, 37, 27, 40, 22, 18, 16, 24, 39, 13, 12, 38,
-  //       ];
-
-  //       let outdatedDrivers = [];
-  //       let updatedDrivers = [];
-
-  //       driverinfo.forEach((driver, index) => {
-  //         if (outdatedDriverNumbers.includes(index + 1)) {
-  //           outdatedDrivers.push({
-  //             ...driver,
-  //             DriverStatus: "Outdated",
-  //             StatusColor: "#EB9C35",
-  //             StatusIcon: <ErrorIcon style={{ fontSize: "small" }} />,
-  //             StatusTextWeight: "bolder",
-  //           });
-  //         } else {
-  //           updatedDrivers.push({
-  //             ...driver,
-  //             DriverStatus: "Up to date",
-  //             StatusColor: "#0C6B37",
-  //             StatusIcon: <CheckIcon style={{ fontSize: "small" }} />,
-  //             StatusTextWeight: "normal",
-  //           });
-  //         }
-  //       });
-
-  //       const updatedDriverInfo = [...outdatedDrivers, ...updatedDrivers];
-  //       setSystemInformation(updatedDriverInfo);
-  //       setOutdatedDriverCount(outdatedDrivers.length);
-  //     } catch (error) {
-  //       console.error("Error fetching and storing driver information:", error);
-  //     }
-  //   };
-
-  //   fetchDataAndStoreOutdatedDrivers();
-  // }, []);
-
   useEffect(() => {
     const fetchSystemInfo = async () => {
       try {
@@ -136,9 +79,6 @@ const handleStartScan = () => {
       });
   }, []);
   
-
-
-
   useEffect(() => {
     async function fetchLatestBackupDate() {
       try {
@@ -161,8 +101,6 @@ const handleStartScan = () => {
     fetchLatestBackupDate();
   }, []);
   
-
-
   return cleanerStart === "status" ? (
     <>
       <div className="container-fluid">
@@ -247,7 +185,8 @@ const handleStartScan = () => {
                       <h6 className="text-black  ml-9 mt-2">
                         <div className="text-xs">Memory(RAM)</div>{" "}
                         <h5 className="ml-7 text-sm font-semibold font-sans">
-                          {systemInfo.memory_info} GB
+   
+   Advance Driver Update                       {systemInfo.memory_info} GB
                         </h5>
                       </h6>
                       <h6 className="text-black  ml-9 mt-2">
