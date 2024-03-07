@@ -24,19 +24,15 @@ export default function Navbar() {
 
     <div className='flex'>
     <img src={settinglogo1} alt="" className='logodesign' />
-
     <a className="navbar-brand navdesign" href="#">   Advance Driver Update</a>
 
     </div>
     <div className='mr-5'>
       <GridViewIcon fontSize="medium" className="nav-icon" />
       <BusinessCenterIcon fontSize="medium" className="nav-icon" />
-      <MinimizeIcon  fontSize="large" className="nav-icon1" onClick={minimizeApp}/>
+      {/* <MinimizeIcon  fontSize="large" className="nav-icon1" onClick={minimizeApp}/> */}
       <CloseIcon  fontSize="small" color="secondary"  className="nav-icon11" onClick = {closeWindow} />
-
-    </div>
-
-    
+    </div>   
   </div>
 </nav>
  </div>
