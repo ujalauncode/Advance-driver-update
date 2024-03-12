@@ -6,7 +6,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import intel from "../Image/intel.png";
 import minewin from "../Image/minewin.png";
-// import grapgics from "../Image/gragics.jpg"
 import { invoke } from "@tauri-apps/api/tauri";
 
 import giphy from "../Image/giphy.gif";
